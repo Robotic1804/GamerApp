@@ -10,7 +10,7 @@ export class EmailTaken implements AsyncValidator {
 
     validate = (control: AbstractControl): Promise<ValidationErrors | null> => {
       return  this.auth.fetchSignInMethodsForEmail(control.value).then(
-        response => response.length ? {EmailTaken: true} : null
+        response => response.length ? {emailTaken: true} : null
         
 
 

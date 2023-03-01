@@ -26,6 +26,7 @@ export class RegisterComponent {
     Validators.required,
     Validators.email
   ], [this.emailTaken.validate])
+  
   age = new FormControl<number | null>(null, [
     Validators.required,
     Validators.min(18),
@@ -36,7 +37,7 @@ export class RegisterComponent {
     Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm)
 
   ])
-  confirm_password = new FormControl('', [
+  comfirm_password = new FormControl('', [
     Validators.required
     
   ])
@@ -58,9 +59,9 @@ export class RegisterComponent {
     email: this.email,
     age: this.age,
     password: this.password,
-    comfirm_password: this.confirm_password,
+    comfirm_password: this.comfirm_password,
     phoneNumber: this.phoneNumber
-  }, [RegisterValidators.match('password', 'confirm_password')])
+  }, [RegisterValidators.match('password', 'comfirm_password')])
 
  async register() {
     this.showAlert = true
