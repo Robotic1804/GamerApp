@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms'
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import {v4 as uuid} from 'uuid'
+import { v4 as uuid } from 'uuid'
+import { last, switchMap } from 'rxjs/operators'
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import firebase from 'firebase/compat/app'
+import { ClipService } from 'src/app/services/clip.service';
 
 
 @Component({
@@ -11,10 +15,21 @@ import {v4 as uuid} from 'uuid'
 })
   
 export class UploadComponent {
-  constructor(private storage: AngularFireStorage){}
+  constructor(private storage: AngularFireStorage,
+    private auth: AngularFireAuth,
+    private clipsService:ClipService) {
+    auth.user.subscribe(user => this.user = user)
+   }
   isDragover = false
   file: File | null = null
   nextStep = false
+  showAlert = false
+  alertColor = 'blue'
+  alertMsg = 'Please wait! Your clip is being uploaded.'
+  inSubmission = false
+  percentage = 0
+  showPercentage = false
+  user: firebase.User | null = null
 
   title = new FormControl('', {
    validators: [
@@ -29,9 +44,12 @@ export class UploadComponent {
   })
 
   storeFile($event: Event) {
+    
     this.isDragover = false
 
-    this.file = ($event as DragEvent).dataTransfer?.files.item(0) ?? null
+    this.file = ($event as DragEvent).dataTransfer ?
+      ($event as DragEvent).dataTransfer?.files.item(0) ?? null :
+      ($event.target as HTMLInputElement).files?.item(0) ?? null
     if (!this.file || this.file.type !== 'video/mp4') {
       return
     }
@@ -40,10 +58,54 @@ export class UploadComponent {
     )
     this.nextStep = true
   }
+  //Bottom for uploading video
   uploadFile() {
+    this.uploadForm.disable()
+    this.showAlert = true
+    this.alertColor = 'blue'
+    this.alertMsg = 'Please wait! your clip is being uploaded.'
+    this.inSubmission = true
+    this.showPercentage = true
     const clipFileName = uuid()
     const clipPath = `clips/${clipFileName}.mp4`
-    this.storage.upload(clipPath, this.file)
+    const task = this.storage.upload(clipPath, this.file)
+    const clipRef = this.storage.ref(clipPath)
+    task.percentageChanges().subscribe(progress => {
+      this.percentage = progress as number/100
+    })
+
+    task.snapshotChanges().pipe(
+      last(),
+      switchMap(() => clipRef.getDownloadURL())
+    ).subscribe({
+      next: (url) => {
+        const clip = {
+          uid: this.user?.uid as string,
+          displayName: this.user?.displayName as string,
+          title: this.title.value,
+          fileName: `${clipFileName}.mp4`,
+          url
+          
+        }
+
+        this.clipsService.createClip(clip)
+        console.log(clip)
+
+        this.alertColor = 'green'
+        this.alertMsg = 'Sucess! Your clip is now ready to share with the world.'
+        this.showPercentage = false
+
+      },
+      error: (error) => {
+        this.uploadForm.enable()
+        this.alertColor = 'red'
+        this.alertMsg = 'Upload failed! Please try again later.'
+        this.inSubmission = true
+        this.showPercentage = false
+        console.log(error)
+
+      }
+    })
 }
 
 }

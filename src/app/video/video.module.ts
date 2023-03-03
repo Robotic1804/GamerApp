@@ -19,6 +19,4 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule
   ]
 })
-export class VideoModule { 
-  
-}
+export class VideoModule { }
