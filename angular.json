@@ -75,7 +75,7 @@
           "options":{
             "headers": {
               "Cross-Origin-Opener-Policy": "same-origin",
-              "Cross-Orgin-Embedder-Policy": "require-corp"
+              "Cross-Origin-Embedder-Policy": "require-corp"
             }
           }
         },

@@ -6,7 +6,6 @@ import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 export class FfmpegService {
   isRunning = false
   isReady = false
-
   private ffmpeg
 
   constructor() {
@@ -30,7 +29,7 @@ const data = await fetchFile(file)
 
     this.ffmpeg.FS('writeFile', file.name, data)
 
-    const seconds = [1, 2, 3]
+    const seconds = [1,2,3]
     const commands: string[] = []
 
     seconds.forEach(second => {
@@ -40,7 +39,6 @@ const data = await fetchFile(file)
 
         // Output Options
         '-ss', `00:00:0${second}`,
-
         '-frames:v', '1',
         '-filter:v', 'scale=510:-1',
 
@@ -61,8 +59,6 @@ const data = await fetchFile(file)
     const screenshots:string[] = []
     
     seconds.forEach(second => {
-
-        
       const screenshotFile = this.ffmpeg.FS('readFile', `output_0${second}.png`)
       const screenshotBlob = new Blob(
         [screenshotFile.buffer], {
