@@ -1,171 +1,209 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/compat/storage';
-import { v4 as uuid } from 'uuid'
-import { switchMap } from 'rxjs/operators';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import firebase from 'firebase/compat/app'
+import { v4 as uuid } from 'uuid';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { SharedUI } from 'src/app/shared/shared-ui';
+import { SharedCore } from 'src/app/shared/shared-core';
+import { SafeURLPipe } from '../pipes/safe-url.pipe';
+import {
+  Storage,
+  ref as storageRef,
+  uploadBytesResumable,
+  getDownloadURL,
+  UploadTask,
+} from '@angular/fire/storage';
+
+import { Auth, User, authState } from '@angular/fire/auth';
+
+import { serverTimestamp } from '@angular/fire/firestore';
+
 import { ClipService } from 'src/app/services/clip.service';
 import { Router } from '@angular/router';
 import { FfmpegService } from 'src/app/services/ffmpeg.service';
-import { combineLatest, forkJoin } from 'rxjs';
 import IClip from 'src/app/models/clip.model';
 
 @Component({
   selector: 'app-upload',
+  standalone: true,
   templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.css']
+  styleUrls: ['./upload.component.css'],
+  imports: [...SharedUI, ...SharedCore, SafeURLPipe],
 })
 export class UploadComponent implements OnDestroy {
-  isDragover = false
-  file: File | null = null
-  nextStep = false
-  showAlert = false
-  alertColor = 'blue'
-  alertMsg = 'Please wait! Your clip is being uploaded.'
-  inSubmission = false
-  percentage = 0
-  showPercentage = false
-  user: firebase.User | null = null
-  task?: AngularFireUploadTask
-  screenshots: string[] = []
-  selectedScreenshot = ''
-  screenshotTask?: AngularFireUploadTask
+  isDragover = false;
+  file: File | null = null;
+  nextStep = false;
 
-  title = new FormControl('', [
-    Validators.required,
-    Validators.minLength(3)
-  ])
+  showAlert = false;
+  alertColor = 'blue';
+  alertMsg = 'Please wait! Your clip is being uploaded.';
+  inSubmission = false;
+
+  percentage = 0;
+  showPercentage = false;
+
+  user: User | null = null;
+
+  // Upload tasks (modular)
+  task?: UploadTask;
+  screenshotTask?: UploadTask;
+
+  screenshots: string[] = [];
+  selectedScreenshot = '';
+
+  title = new FormControl('', [Validators.required, Validators.minLength(3)]);
   uploadForm = new FormGroup({
-    title: this.title
-  })
+    title: this.title,
+  });
+
+  // subjects para el progreso (0–100)
+  private clipProgress$ = new BehaviorSubject<number>(0);
+  private screenshotProgress$ = new BehaviorSubject<number>(0);
 
   constructor(
-    private storage: AngularFireStorage,
-    private auth: AngularFireAuth,
+    private storage: Storage,
+    private auth: Auth,
     private clipsService: ClipService,
     private router: Router,
     public ffmpegService: FfmpegService
   ) {
-    auth.user.subscribe(user => this.user = user)
-    this.ffmpegService.init()
+    authState(this.auth).subscribe((user) => (this.user = user));
+    this.ffmpegService.init();
+
+    combineLatest([this.clipProgress$, this.screenshotProgress$])
+      .pipe(map(([c, s]) => (c + s) / 2))
+      .subscribe((pct) => (this.percentage = pct));
   }
 
   ngOnDestroy(): void {
-    this.task?.cancel()
+    this.task?.cancel();
+    this.screenshotTask?.cancel();
   }
 
   async storeFile($event: Event) {
-    if (this.ffmpegService.isRunning) {
-      return
-    }
+    if (this.ffmpegService.isRunning) return;
 
-    this.isDragover = false
+    this.isDragover = false;
 
-    this.file = ($event as DragEvent).dataTransfer ?
-      ($event as DragEvent).dataTransfer?.files.item(0) ?? null :
-      ($event.target as HTMLInputElement).files?.item(0) ?? null
+    this.file = ($event as DragEvent).dataTransfer
+      ? ($event as DragEvent).dataTransfer?.files.item(0) ?? null
+      : ($event.target as HTMLInputElement).files?.item(0) ?? null;
 
-    if (!this.file || this.file.type !== 'video/mp4') {
-      return
-    }
+    if (!this.file || this.file.type !== 'video/mp4') return;
 
-    this.screenshots = await this.ffmpegService.getScreenshots(this.file)
+    this.screenshots = await this.ffmpegService.getScreenshots(this.file);
+    this.selectedScreenshot = this.screenshots[0];
 
-    this.selectedScreenshot = this.screenshots[0]
+    this.title.setValue(this.file.name.replace(/\.[^/.]+$/, ''));
+    this.nextStep = true;
+  }
 
-    this.title.setValue(
-      this.file.name.replace(/\.[^/.]+$/, '')
-    )
-    this.nextStep = true
+  // 👇 NUEVO: Método para cancelar la subida
+  cancelUpload(): void {
+    // Cancela las tareas de upload si existen
+    this.task?.cancel();
+    this.screenshotTask?.cancel();
+
+    // Resetea los valores
+    this.inSubmission = false;
+    this.showAlert = false;
+    this.showPercentage = false;
+    this.percentage = 0;
+    this.clipProgress$.next(0);
+    this.screenshotProgress$.next(0);
+
+    // Habilita el formulario nuevamente
+    this.uploadForm.enable();
+
+    // Muestra mensaje de cancelación
+    this.showAlert = true;
+    this.alertColor = 'orange';
+    this.alertMsg = 'Upload cancelled by user.';
+
+    // Oculta el mensaje después de 3 segundos
+    setTimeout(() => {
+      this.showAlert = false;
+    }, 3000);
   }
 
   async uploadFile() {
-    this.uploadForm.disable()
+    if (!this.file || !this.selectedScreenshot) return;
 
-    this.showAlert = true
-    this.alertColor = 'blue'
-    this.alertMsg = 'Please wait! Your clip is being uploaded.'
-    this.inSubmission = true
-    this.showPercentage = true
+    this.uploadForm.disable();
 
-    const clipFileName = uuid()
-    const clipPath = `clips/${clipFileName}.mp4`
+    this.showAlert = true;
+    this.alertColor = 'blue';
+    this.alertMsg = 'Please wait! Your clip is being uploaded.';
+    this.inSubmission = true;
+    this.showPercentage = true;
+
+    const clipFileName = uuid();
+    const clipPath = `clips/${clipFileName}.mp4`;
 
     const screenshotBlob = await this.ffmpegService.blobFromURL(
       this.selectedScreenshot
-    )
-    const screenshotPath = `screenshots/${clipFileName}.png`
+    );
+    const screenshotPath = `screenshots/${clipFileName}.png`;
 
-    this.task = this.storage.upload(clipPath, this.file)
-    const clipRef = this.storage.ref(clipPath)
+    const clipRef = storageRef(this.storage, clipPath);
+    const screenshotRef = storageRef(this.storage, screenshotPath);
 
-    this.screenshotTask = this.storage.upload(
-      screenshotPath, screenshotBlob
-    )
-    const screenshotRef = this.storage.ref(screenshotPath)
+    this.task = uploadBytesResumable(clipRef, this.file);
+    this.screenshotTask = uploadBytesResumable(screenshotRef, screenshotBlob);
 
-    combineLatest([
-      this.task.percentageChanges(),
-      this.screenshotTask.percentageChanges()
-    ]).subscribe((progress) => {
-      const [clipProgress, screenshotProgress] = progress
+    this.task.on('state_changed', (snap) => {
+      this.clipProgress$.next((snap.bytesTransferred / snap.totalBytes) * 100);
+    });
 
-      if (!clipProgress || !screenshotProgress) {
-        return
+    this.screenshotTask.on('state_changed', (snap) => {
+      this.screenshotProgress$.next(
+        (snap.bytesTransferred / snap.totalBytes) * 100
+      );
+    });
+
+    try {
+      await Promise.all([this.task, this.screenshotTask]);
+
+      const [clipURL, screenshotURL] = await Promise.all([
+        getDownloadURL(clipRef),
+        getDownloadURL(screenshotRef),
+      ]);
+
+      const clip: Partial<IClip> = {
+        uid: this.user?.uid as string,
+        displayName: this.user?.displayName as string,
+        title: this.title.value ?? '',
+        fileName: `${clipFileName}.mp4`,
+        url: clipURL,
+        screenshotURL,
+        screenshotFileName: `${clipFileName}.png`,
+        timestamp: serverTimestamp() as any,
+      };
+
+      const clipDocRef = await this.clipsService.createClip(clip as IClip);
+
+      this.alertColor = 'green';
+      this.alertMsg =
+        'Success! Your clip is now ready to share with the world.';
+      this.showPercentage = false;
+
+      setTimeout(() => {
+        this.router.navigate(['clip', clipDocRef.id]);
+      }, 1000);
+    } catch (error: any) {
+      // 👇 Verifica si fue cancelado por el usuario
+      if (error.code === 'storage/canceled') {
+        console.log('Upload was cancelled');
+        return; // No muestra error si fue cancelación intencional
       }
 
-      const total = clipProgress + screenshotProgress
-
-      this.percentage = total as number / 200
-    })
-
-    forkJoin([
-      this.task.snapshotChanges(),
-      this.screenshotTask.snapshotChanges()
-    ]).pipe(
-      switchMap(() => forkJoin([
-        clipRef.getDownloadURL(),
-        screenshotRef.getDownloadURL()
-      ]))
-    ).subscribe({
-      next: async (urls) => {
-        const [clipURL, screenshotURL] = urls
-
-        const clip = {
-          uid: this.user?.uid as string,
-          displayName: this.user?.displayName as string,
-          title: this.title.value,
-          fileName: `${clipFileName}.mp4`,
-          url: clipURL,
-          screenshotURL,
-          screenshotFileName: `${clipFileName}.png`,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        }
-
-        const clipDocRef = await this.clipsService.createClip(clip as IClip)
-
-        console.log(clip)
-
-        this.alertColor = 'green'
-        this.alertMsg = 'Success! Your clip is now ready to share with the world.'
-        this.showPercentage = false
-
-        setTimeout(() => {
-          this.router.navigate([
-            'clip', clipDocRef.id
-          ])
-        }, 1000)
-      },
-      error: (error) => {
-        this.uploadForm.enable()
-
-        this.alertColor = 'red'
-        this.alertMsg = 'Upload failed! Please try again later.'
-        this.inSubmission = true
-        this.showPercentage = false
-        console.error(error)
-      }
-    })
+      this.uploadForm.enable();
+      this.alertColor = 'red';
+      this.alertMsg = 'Upload failed! Please try again later.';
+      this.inSubmission = false;
+      this.showPercentage = false;
+      console.error(error);
+    }
   }
 }

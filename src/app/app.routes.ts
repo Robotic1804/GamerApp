@@ -21,10 +21,11 @@ export const appRoutes: Routes = [
       clip: ClipService,
     },
   },
+  // 👇 Agrega las rutas de video aquí (lazy loading)
   {
     path: '',
-    loadChildren: async () =>
-      (await import('./video/video.module')).VideoModule,
+    loadChildren: () =>
+      import('./video/video.routes').then((m) => m.videoRoutes),
   },
   {
     path: '**',

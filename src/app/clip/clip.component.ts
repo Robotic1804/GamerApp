@@ -2,15 +2,20 @@ import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@an
 import { ActivatedRoute, Params } from '@angular/router';
 import videojs from 'video.js';
 import IClip from '../models/clip.model';
-import {DatePipe} from '@angular/common'
+import { DatePipe } from '@angular/common';
+import { SharedCore } from '../shared/shared-core';
+import { SharedUI } from '../shared/shared-ui';
+
 
 
 @Component({
   selector: 'app-clip',
+  standalone: true,
   templateUrl: './clip.component.html',
   styleUrls: ['./clip.component.css'],
   encapsulation: ViewEncapsulation.None,
-  providers: [DatePipe]
+  providers: [DatePipe],
+  imports: [...SharedCore, ...SharedUI],
 })
 export class ClipComponent implements OnInit {
   @ViewChild('videoPlayer', { static: true }) target?: ElementRef

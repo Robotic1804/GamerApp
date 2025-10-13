@@ -1,10 +1,14 @@
 import { Component, AfterContentInit, ContentChildren, QueryList} from '@angular/core';
 import { TabComponent } from '../tab/tab.component';
+import { SharedCore } from '../shared-core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tabs-container',
+  standalone: true,
   templateUrl: './tabs-container.component.html',
-  styleUrls: ['./tabs-container.component.css']
+  styleUrls: ['./tabs-container.component.css'],
+ imports: [SharedCore, CommonModule]
 })
 export class TabsContainerComponent implements AfterContentInit {
 

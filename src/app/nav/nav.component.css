@@ -1,0 +1,18 @@
+/* Animación personalizada */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 300ms ease-out forwards;
+}
+
+/* Asegurar que el scroll funcione correctamente */
+body.menu-open {
+  overflow: hidden;
+}

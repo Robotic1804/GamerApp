@@ -1,0 +1,60 @@
+.cube {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  opacity: 0.3;
+  animation: float 10s infinite ease-in-out;
+}
+
+@media (min-width: 768px) {
+  .cube {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cube {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.cube:nth-child(1) {
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.cube:nth-child(2) {
+  top: 20%;
+  right: 20%;
+  animation-delay: 2s;
+}
+
+.cube:nth-child(3) {
+  bottom: 20%;
+  left: 15%;
+  animation-delay: 4s;
+}
+
+.cube:nth-child(4) {
+  bottom: 10%;
+  right: 10%;
+  animation-delay: 6s;
+}
+
+.cube:nth-child(5) {
+  top: 50%;
+  left: 50%;
+  animation-delay: 8s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-30px) rotate(180deg);
+  }
+}

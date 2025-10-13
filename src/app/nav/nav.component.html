@@ -1,55 +1,219 @@
 <!-- Header -->
+<header id="header" class="bg-secondary sticky top-0 z-50">
+  <nav class="container mx-auto flex justify-between items-center py-4 md:py-8 px-4">
+    <!-- App Name -->
+    <a class="text-2xl md:text-3xl text-indigo-400 font-bold uppercase" routerLink="/" (click)="closeMobileMenu()">
+      Clipz
+    </a>
 
-  <header id="header" class="bg-secondary">
-    <nav class="container mx-auto flex justify-start items-center py-8 px-4">
-      <!-- App Name -->
-      <a class="text-3xl text-indigo-400 font-bold uppercase mr-4" routerLink="/">Clipz</a>
-
-      <div class="flex flex-grow items-center">
-        <!-- Primary Navigation -->
-        <ul class="flex flex-row mt-1">
-          <!-- Navigation Links -->
-          <li *ngIf="!(auth.isAuthenticated$ | async); else authLinks">
-            <a class="px-2" href="#" (click)="openModal($event)">Login / Register</a>
+    <!-- Desktop Navigation -->
+    <div class="hidden md:flex md:flex-grow md:items-center md:justify-between md:ml-8">
+      <!-- Primary Navigation -->
+      <ul class="flex flex-row gap-6">
+        @if (!(auth.isAuthenticated$ | async)) {
+          <li>
+            <a class="hover:text-indigo-400 transition-colors duration-200" 
+               href="#" 
+               (click)="openModal($event)">
+              Login / Register
+            </a>
           </li>
-          <ng-template #authLinks>
-             <li>
-            <a class="px-2" routerLink="/manage" routerLinkActive="text-indigo-400"[routerLinkActiveOptions]="{exact:true}" [queryParams]="{sort:'1'}">Manage</a>
+        } @else {
+          <li>
+            <a class="hover:text-indigo-400 transition-colors duration-200" 
+               routerLink="/manage" 
+               routerLinkActive="text-indigo-400"
+               [routerLinkActiveOptions]="{exact:true}" 
+               [queryParams]="{sort:'1'}">
+              Manage
+            </a>
           </li>
           <li>
-            <a class="px-2" routerLink="/upload" routerLinkActive="text-indigo-400"[routerLinkActiveOptions]="{exact:true}"
-            >Upload</a>
+            <a class="hover:text-indigo-400 transition-colors duration-200" 
+               routerLink="/upload" 
+               routerLinkActive="text-indigo-400"
+               [routerLinkActiveOptions]="{exact:true}">
+              Upload
+            </a>
           </li>
           <li>
-          <a class="px-2" href="#"(click)="auth.logout($event)">
-
-            logout
-
+            <a class="hover:text-indigo-400 transition-colors duration-200" 
+               href="#"
+               (click)="auth.logout($event)">
+              Logout
+            </a>
+          </li>
+        }
+        <li>
+          <a class="hover:text-indigo-400 transition-colors duration-200" 
+             routerLink="/about" 
+             routerLinkActive="text-indigo-400">
+            About
           </a>
-          </li>
-          </ng-template>
-       
-          <li routerLinkActive="text-indigo-400">
-            <a class="px-2" routerLink="/about" routerLinkActive="text-indigo-400">About</a>
-          </li>
-        </ul>
-        <!-- Language Switcher -->
-        <ul class="flex flex-row ml-auto">
-          <li>
-            <a href="#">
-              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA1CAMAAACA7r40AAAA/FBMVEWyIjNPN2Y8O27///8/PnBOTXxycpY9PG9RUX5HR3dIR3dLSnlPTny4uMpWVYFFRHVwb5VlZIx7e52DgqOIh6aIiKc+PXBJSHhTUn9hYYqyIjReXohgX4lYV4Lr6/C2tcjPdYB0c5haWYRYV4Nra5GJiac+PW/FxdTHYG1RUH3eoajltbtOTXvty89BQHHg3+hSUX6GYoC6usyVlbFycZa7u8yUk6+sq8FCQXO0tMe1tMhiYYpMS3pDQnNvbpTExNN8fJ7GxdTGxtWCgqLHx9WXlrLXi5SYl7Kiobrg4Oiiorrn5u3n5+2jo7ukpLvw8PTx8fX09Pf19firqsC5sMNxAAAAAnRSTlPQ9qN1Xw4AAAGlSURBVHhe7ZXFiiRBFEVjznvp5W7t7j3u7m7//y8D1dAMGbnI4jW5KOpsgjibCxFcrrtVEmcBGAGQJHB98d3EgEM/ygsg/nwRAy15rxQ4Ywh3JQX49hVgKA/Ad1hDkkGTMSQJjGkOEmo133FmwAEQyl8FfSj3gFgkzjsQAw6AZ796AP2fGcDBS8/ZQ7ZQlJ2d+bEFqp6zhuh9Cf9/pDtKkTs04KBTD4jgx3eICOodoshz1p7M6UUAUQ+Ap2Pf2UMI5UBBX18/Ut7ZQ84Jui10QKsbcA7dt77jxIBDt+sxMNzrD4HL+rZS4Iw9iTZkCjRFmsBUHkcUOGMI7dkpKezuQsrprM3zR76zN572ekdBX623gaONJ0d5B5sGHAA1+QTwRQJgX2Q/7+w9GZGlDZKERpoxgkbDc8s0WscGSo+WGMiNVlgwWuFNjdafPsDe7wzg3RvP2UNCFGVtbX6EoOo7PhgoO1rGnswHiquB4mqgfIcxpBTGkNslMf2JVMAShRxXgJtUwBKFbFbAqicL4U4qYNWThXCHFbDqyUK4swpY9WQhXBX8A2rVjaQ6HWXmAAAAAElFTkSuQmCC" 
-                alt="en" width="22" height="14" class="inline-block">
-              <span class="ml-1">English</span>
+        </li>
+      </ul>
+
+      <!-- Language Switcher -->
+      <ul class="flex flex-row gap-4">
+        <li>
+          <a href="#" class="flex items-center hover:text-indigo-400 transition-colors duration-200">
+            <img 
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA1CAMAAACA7r40AAAA/FBMVEWyIjNPN2Y8O27///8/PnBOTXxycpY9PG9RUX5HR3dIR3dLSnlPTny4uMpWVYFFRHVwb5VlZIx7e52DgqOIh6aIiKc+PXBJSHhTUn9hYYqyIjReXohgX4lYV4Lr6/C2tcjPdYB0c5haWYRYV4Nra5GJiac+PW/FxdTHYG1RUH3eoajltbtOTXvty89BQHHg3+hSUX6GYoC6usyVlbFycZa7u8yUk6+sq8FCQXO0tMe1tMhiYYpMS3pDQnNvbpTExNN8fJ7GxdTGxtWCgqLHx9WXlrLXi5SYl7Kiobrg4Oiiorrn5u3n5+2jo7ukpLvw8PTx8fX09Pf19firqsC5sMNxAAAAAnRSTlPQ9qN1Xw4AAAGlSURBVHhe7ZXFiiRBFEVjznvp5W7t7j3u7m7//y8D1dAMGbnI4jW5KOpsgjibCxFcrrtVEmcBGAGQJHB98d3EgEM/ygsg/nwRAy15rxQ4Ywh3JQX49hVgKA/Ad1hDkkGTMSQJjGkOEmo133FmwAEQyl8FfSj3gFgkzjsQAw6AZ796AP2fGcDBS8/ZQ7ZQlJ2d+bEFqp6zhuh9Cf9/pDtKkTs04KBTD4jgx3eICOodoshz1p7M6UUAUQ+Ap2Pf2UMI5UBBX18/Ut7ZQ84Jui10QKsbcA7dt77jxIBDt+sxMNzrD4HL+rZS4Iw9iTZkCjRFmsBUHkcUOGMI7dkpKezuQsrprM3zR76zN572ekdBX623gaONJ0d5B5sGHAA1+QTwRQJgX2Q/7+w9GZGlDZKERpoxgkbDc8s0WscGSo+WGMiNVlgwWuFNjdafPsDe7wzg3RvP2UNCFGVtbX6EoOo7PhgoO1rGnswHiquB4mqgfIcxpBTGkNslMf2JVMAShRxXgJtUwBKFbFbAqicL4U4qYNWThXCHFbDqyUK4swpY9WQhXBX8A2rVjaQ6HWXmAAAAAElFTkSuQmCC" 
+              alt="en" 
+              width="22" 
+              height="14" 
+              class="inline-block">
+            <span class="ml-2">English</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button 
+      type="button"
+      (click)="toggleMobileMenu()"
+      class="md:hidden text-white focus:outline-none z-[60] relative"
+      [attr.aria-label]="isMobileMenuOpen ? 'Close menu' : 'Open menu'"
+      [attr.aria-expanded]="isMobileMenuOpen">
+      <span class="material-icons text-3xl transition-transform duration-300" 
+            [class.rotate-90]="isMobileMenuOpen">
+        {{ isMobileMenuOpen ? 'close' : 'menu' }}
+      </span>
+    </button>
+  </nav>
+</header>
+
+<!-- Mobile Menu Overlay (backdrop) -->
+<!-- Mobile Menu Overlay (backdrop) -->
+@if (isMobileMenuOpen) {
+  <div 
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] md:hidden pointer-events-auto md:pointer-events-none animate-fadeIn"
+    (click)="closeMobileMenu()">
+  </div>
+}
+
+<!-- Mobile Menu Sidebar -->
+<div 
+  class="fixed top-0 right-0 h-screen w-80 max-w-[85vw] bg-secondary shadow-2xl z-[56] md:hidden transition-transform duration-300 ease-out overflow-y-auto"
+  [class.translate-x-0]="isMobileMenuOpen"
+  [class.translate-x-full]="!isMobileMenuOpen">
+  
+  <div class="flex flex-col min-h-full">
+    <!-- Menu Header -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-700 bg-secondary sticky top-0 z-10">
+      <h2 class="text-2xl font-bold text-indigo-400 uppercase">Clipz</h2>
+      <button 
+        type="button"
+        (click)="closeMobileMenu()"
+        class="text-white hover:text-indigo-400 transition-colors p-1 rounded-lg hover:bg-gray-700">
+        <span class="material-icons text-2xl">close</span>
+      </button>
+    </div>
+
+    <!-- Menu Content -->
+    <nav class="flex-1 px-4 py-6">
+      <!-- Auth Section -->
+      <div class="mb-6">
+        @if (!(auth.isAuthenticated$ | async)) {
+          <a 
+            href="#" 
+            (click)="openModal($event)"
+            class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-indigo-600 active:bg-indigo-700 transition-all duration-200 group">
+            <span class="material-icons text-xl text-indigo-400 group-hover:text-white">login</span>
+            <span class="text-base font-medium">Login / Register</span>
+          </a>
+        } @else {
+          <div class="space-y-1">
+            <a 
+              routerLink="/manage" 
+              routerLinkActive="bg-indigo-600"
+              [routerLinkActiveOptions]="{exact:true}"
+              [queryParams]="{sort:'1'}"
+              (click)="closeMobileMenu()"
+              class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-indigo-600 active:bg-indigo-700 transition-all duration-200 group">
+              <span class="material-icons text-xl text-indigo-400 group-hover:text-white">video_library</span>
+              <span class="text-base font-medium">Manage</span>
             </a>
-          </li>
-          <li style="display: none;">
-            <a href="#">
-              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAHlBMVEUpQqK2q8384OL3qa/tKTkAI5Wrt9z////5t7ztKTlzpJCAAAAABXRSTlP++vjs1BQWlgsAAAAxSURBVHgBYmRAA4yKaAJCAugqQgHtyzENAAAAAiD7pzaDr4MfRVEURVGU36IoipK5FLWNJ6UFusbWAAAAAElFTkSuQmCC" 
-                alt="fr" width="22" height="14" class="inline-block">
-                <span class="ml-1">French</span>
+            
+            <a 
+              routerLink="/upload" 
+              routerLinkActive="bg-indigo-600"
+              [routerLinkActiveOptions]="{exact:true}"
+              (click)="closeMobileMenu()"
+              class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-indigo-600 active:bg-indigo-700 transition-all duration-200 group">
+              <span class="material-icons text-xl text-indigo-400 group-hover:text-white">cloud_upload</span>
+              <span class="text-base font-medium">Upload</span>
             </a>
-          </li>
-        </ul>
+            
+            <a 
+              href="#"
+              (click)="auth.logout($event); closeMobileMenu()"
+              class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-600 active:bg-red-700 transition-all duration-200 group">
+              <span class="material-icons text-xl text-red-400 group-hover:text-white">logout</span>
+              <span class="text-base font-medium">Logout</span>
+            </a>
+          </div>
+        }
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t border-gray-700 my-6"></div>
+
+      <!-- General Navigation -->
+      <div class="space-y-1 mb-6">
+        <a 
+          routerLink="/about" 
+          routerLinkActive="bg-indigo-600"
+          (click)="closeMobileMenu()"
+          class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-indigo-600 active:bg-indigo-700 transition-all duration-200 group">
+          <span class="material-icons text-xl text-indigo-400 group-hover:text-white">info</span>
+          <span class="text-base font-medium">About</span>
+        </a>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t border-gray-700 my-6"></div>
+
+      <!-- Language Section -->
+      <div>
+        <h3 class="text-xs uppercase text-gray-400 font-semibold mb-3 px-4 tracking-wider">Language</h3>
+        <div class="space-y-1">
+          <button 
+            type="button"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-indigo-600 transition-all duration-200">
+            <img 
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA1CAMAAACA7r40AAAA/FBMVEWyIjNPN2Y8O27///8/PnBOTXxycpY9PG9RUX5HR3dIR3dLSnlPTny4uMpWVYFFRHVwb5VlZIx7e52DgqOIh6aIiKc+PXBJSHhTUn9hYYqyIjReXohgX4lYV4Lr6/C2tcjPdYB0c5haWYRYV4Nra5GJiac+PW/FxdTHYG1RUH3eoajltbtOTXvty89BQHHg3+hSUX6GYoC6usyVlbFycZa7u8yUk6+sq8FCQXO0tMe1tMhiYYpMS3pDQnNvbpTExNN8fJ7GxdTGxtWCgqLHx9WXlrLXi5SYl7Kiobrg4Oiiorrn5u3n5+2jo7ukpLvw8PTx8fX09Pf19firqsC5sMNxAAAAAnRSTlPQ9qN1Xw4AAAGlSURBVHhe7ZXFiiRBFEVjznvp5W7t7j3u7m7//y8D1dAMGbnI4jW5KOpsgjibCxFcrrtVEmcBGAGQJHB98d3EgEM/ygsg/nwRAy15rxQ4Ywh3JQX49hVgKA/Ad1hDkkGTMSQJjGkOEmo133FmwAEQyl8FfSj3gFgkzjsQAw6AZ796AP2fGcDBS8/ZQ7ZQlJ2d+bEFqp6zhuh9Cf9/pDtKkTs04KBTD4jgx3eICOodoshz1p7M6UUAUQ+Ap2Pf2UMI5UBBX18/Ut7ZQ84Jui10QKsbcA7dt77jxIBDt+sxMNzrD4HL+rZS4Iw9iTZkCjRFmsBUHkcUOGMI7dkpKezuQsrprM3zR76zN572ekdBX623gaONJ0d5B5sGHAA1+QTwRQJgX2Q/7+w9GZGlDZKERpoxgkbDc8s0WscGSo+WGMiNVlgwWuFNjdafPsDe7wzg3RvP2UNCFGVtbX6EoOo7PhgoO1rGnswHiquB4mqgfIcxpBTGkNslMf2JVMAShRxXgJtUwBKFbFbAqicL4U4qYNWThXCHFbDqyUK4swpY9WQhXBX8A2rVjaQ6HWXmAAAAAElFTkSuQmCC" 
+              alt="en" 
+              width="22" 
+              height="15" 
+              class="rounded">
+            <span class="text-sm font-medium">English</span>
+            <span class="material-icons text-base ml-auto">check_circle</span>
+          </button>
+          
+          <button 
+            type="button"
+            disabled
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700/50 transition-all duration-200 opacity-50 cursor-not-allowed">
+            <img 
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAHlBMVEUpQqK2q8384OL3qa/tKTkAI5Wrt9z////5t7ztKTlzpJCAAAAABXRSTlP++vjs1BQWlgsAAAAxSURBVHgBYmRAA4yKaAJCAugqQgHtyzENAAAAAiD7pzaDr4MfRVEURVGU36IoipK5FLWNJ6UFusbWAAAAAElFTkSuQmCC" 
+              alt="fr" 
+              width="22" 
+              height="15" 
+              class="rounded">
+            <span class="text-sm font-medium">French</span>
+            <span class="text-[10px] bg-gray-700 px-2 py-0.5 rounded ml-auto uppercase font-semibold">Soon</span>
+          </button>
+        </div>
       </div>
     </nav>
-  </header>
+
+    <!-- Menu Footer -->
+    <div class="p-4 border-t border-gray-700 bg-secondary/80 backdrop-blur-sm">
+      <p class="text-[10px] text-gray-400 text-center leading-relaxed">
+        © 2024 Clipz. All rights reserved.
+      </p>
+    </div>
+  </div>
+</div>

@@ -3,13 +3,19 @@ import { ModalService } from 'src/app/services/modal.service';
 import IClip from 'src/app/models/clip.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { ClipService } from 'src/app/services/clip.service';
+import { SharedCore } from 'src/app/shared/shared-core';
+import { SharedUI } from 'src/app/shared/shared-ui';
+
+
 
 @Component({
   selector: 'app-edit',
+  standalone: true,
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.css']
+  styleUrls: ['./edit.component.css'],
+  imports: [...SharedCore, ...SharedUI]
 })
-export class EditComponent implements OnInit, OnDestroy {
+export class EditComponent implements OnInit, OnDestroy, OnChanges {
   @Input() activeClip: IClip | null = null
   inSubmission = false
   showAlert = false

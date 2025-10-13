@@ -4,11 +4,16 @@ import { ClipService } from 'src/app/services/clip.service';
 import IClip from 'src/app/models/clip.model';
 import { ModalService } from 'src/app/services/modal.service';
 import { BehaviorSubject } from 'rxjs';
+import { SharedCore } from 'src/app/shared/shared-core';
+import { SharedUI } from 'src/app/shared/shared-ui';
+import { EditComponent } from '../edit/edit.component';
 
 @Component({
   selector: 'app-manage',
+  standalone: true,
   templateUrl: './manage.component.html',
-  styleUrls: ['./manage.component.css']
+  styleUrls: ['./manage.component.css'],
+  imports:[...SharedCore, ...SharedUI, EditComponent],
 })
 export class ManageComponent implements OnInit {
   videoOrder = '1'

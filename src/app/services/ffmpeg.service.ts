@@ -58,21 +58,21 @@ const data = await fetchFile(file)
 
     const screenshots:string[] = []
     
-    seconds.forEach(second => {
-      const screenshotFile = this.ffmpeg.FS('readFile', `output_0${second}.png`)
-      const screenshotBlob = new Blob(
-        [screenshotFile.buffer], {
+    seconds.forEach((second) => {
+      const screenshotFile = this.ffmpeg.FS(
+        'readFile',
+        `output_0${second}.png`
+      );
+   const screenshotBlob = new Blob([new Uint8Array(screenshotFile)], {
+     type: 'image/png',
+   });
 
-          type: 'image/png'
-          
-        }
-      )
 
-      const screenshotURL = URL.createObjectURL(screenshotBlob)
+      const screenshotURL = URL.createObjectURL(screenshotBlob);
 
-      screenshots.push(screenshotURL)
+      screenshots.push(screenshotURL);
+    });
 
-    })
 
     this.isRunning = false
 

@@ -55,7 +55,7 @@
                 'border-transparent': screenshot !== selectedScreenshot
               }"
               (click)="selectedScreenshot = screenshot">
-              <img [src]="screenshot | safeURL">
+              <img [src]="screenshot | safeUrl">
             </div>
           </div>
 
@@ -66,15 +66,32 @@
               placeholder="Enter Title"></app-input>
           </div>
 
-          <div class="mt-4 text-right">
-            <button [disabled]="inSubmission"
+          <!-- 👇 Botones: Cancelar y Publicar -->
+          <div class="mt-4 flex justify-end gap-3">
+            <!-- Botón Cancelar (solo visible durante la subida) -->
+            <button 
+              *ngIf="inSubmission"
+              type="button"
+              (click)="cancelUpload()"
+              class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+              <span class="material-icons mr-1 text-sm">close</span>
+              Cancel Upload
+            </button>
+
+            <!-- Botón Publicar -->
+            <button 
+              [disabled]="inSubmission"
               [ngClass]="{
                 'opacity-50': inSubmission,
                 'hover:bg-indigo-700': !inSubmission
               }"
               type="submit" 
               class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm rounded-md text-white bg-indigo-600 focus:outline-none">
-              Publish
+              <span *ngIf="!inSubmission">Publish</span>
+              <span *ngIf="inSubmission" class="flex items-center">
+                <span class="material-icons animate-spin mr-1 text-sm">refresh</span>
+                Uploading...
+              </span>
             </button>
           </div>
         </form>

@@ -4,12 +4,16 @@ import { AuthService } from 'src/app/services/auth.service';
 import IUser from 'src/app/models/user.model';
 import { RegisterValidators } from '../validators/register-validators';
 import { EmailTaken } from '../validators/email-taken';
+import { SharedCore } from 'src/app/shared/shared-core';
+import { SharedUI } from 'src/app/shared/shared-ui';
 
 
 @Component({
   selector: 'app-register',
+  standalone: true,
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
+  imports: [...SharedCore, ...SharedUI]
 })
 export class RegisterComponent {
 

@@ -1,113 +1,145 @@
+// src/app/services/clip.service.ts
 import { Injectable } from '@angular/core';
 import {
-  AngularFirestore, AngularFirestoreCollection, DocumentReference,
-QuerySnapshot} from '@angular/fire/compat/firestore'
-import IClip from '../models/clip.model';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { switchMap, map } from 'rxjs';
-import { of, BehaviorSubject, combineLatest } from 'rxjs'
-import { AngularFireStorage } from '@angular/fire/compat/storage'
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+  Router,
+  Resolve,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+} from '@angular/router';
 
-@Injectable({
-  providedIn: 'root'
-})
+import {
+  Firestore,
+  collection,
+  CollectionReference,
+  addDoc,
+  doc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  orderBy,
+  limit,
+  startAfter,
+  getDocs,
+  DocumentReference,
+  QueryDocumentSnapshot,
+} from '@angular/fire/firestore';
+
+import {
+  Storage,
+  ref as storageRef,
+  deleteObject,
+} from '@angular/fire/storage';
+
+import { Auth, authState } from '@angular/fire/auth';
+
+import { BehaviorSubject, combineLatest, from, map, of, switchMap } from 'rxjs';
+import IClip from '../models/clip.model';
+
+@Injectable({ providedIn: 'root' })
 export class ClipService implements Resolve<IClip | null> {
-  public clipsCollection: AngularFirestoreCollection<IClip>
-  pageClips: IClip[] = []
-  pendingReq = false
+  /** Colección modular tipada */
+  public clipsCollection: CollectionReference<IClip>;
+
+  /** Estado de paginación (igual que antes) */
+  pageClips: IClip[] = [];
+  pendingReq = false;
 
   constructor(
-    private db: AngularFirestore,
-    private auth: AngularFireAuth,
-    private storage: AngularFireStorage,
-    private router: Router) { 
-                                     this.clipsCollection = db.collection('clips')
+    private db: Firestore,
+    private auth: Auth,
+    private storage: Storage,
+    private router: Router
+  ) {
+    this.clipsCollection = collection(
+      this.db,
+      'clips'
+    ) as CollectionReference<IClip>;
   }
-   createClip(data: IClip): Promise<DocumentReference<IClip>> {
-    
-   return  this.clipsCollection.add(data)
 
-
+  /** === Crear clip (modular) === */
+  createClip(data: IClip): Promise<DocumentReference<IClip>> {
+    return addDoc(this.clipsCollection, data);
   }
+
+  /** === Clips por usuario con orden dinámico (modular) === */
   getUserClips(sort$: BehaviorSubject<string>) {
-    return combineLatest([this.auth.user, sort$]).pipe(
-      switchMap(values => {
-        const [user, sort] = values
-        if (!user) {
-            
-          return of([])
-        }
-        const query = this.clipsCollection.ref.where(
-          'uid','==', user.uid
-        ).orderBy('timestamp', sort === '1' ? 'desc':'asc' )
-        return query.get()
-      }),
-      map(snapshot => (snapshot as QuerySnapshot<IClip>).docs)
-    )
+    return combineLatest([authState(this.auth), sort$]).pipe(
+      switchMap(([user, sort]) => {
+        if (!user) return of([] as QueryDocumentSnapshot<IClip>[]);
 
-  }
+        const q = query(
+          this.clipsCollection,
+          where('uid', '==', user.uid),
+          orderBy('timestamp', sort === '1' ? 'desc' : 'asc')
+        );
 
-  updateClip(id: string, title: string) {
-  return  this.clipsCollection.doc(id).update({
-      title
-    })
-
-
-  }
-
- async deleteClip(clip: IClip) {
-   const clipRef = this.storage.ref(`clips/${clip.fileName}`)
-   const screenshotRef = this.storage.ref(`screenshots/${clip.screenshotFileName}`)
-   await clipRef.delete()
-   await screenshotRef.delete()
-   
-   await this.clipsCollection.doc(clip.docID).delete()
- }
-  
-  async getClips() {
-    if(this.pendingReq) {
-      return
-    }
-    this.pendingReq = true
-
-    let query = this.clipsCollection.ref.orderBy('timestamp', 'desc').limit(6)
-
-    const { length } = this.pageClips
-    
-    if(length) {
-      const lastDocID = this.pageClips[length - 1].docID
-      const lastDoc = await this.clipsCollection.doc(lastDocID).get().toPromise()
-
-      query = query.startAfter(lastDoc)
-
-    }
-
-    const snapshot = await query.get()
-
-    snapshot.forEach(
-      doc => {
-        this.pageClips.push(
-          {
-            docID: doc.id,
-            ...doc.data()
-          })
+        return from(getDocs(q)).pipe(
+          map((snap) => snap.docs as QueryDocumentSnapshot<IClip>[])
+        );
       })
-
-    this.pendingReq = false
+    );
   }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    
-    return this.clipsCollection.doc(route.params['id']).get().pipe(map(snapshot => {
-      const data = snapshot.data()
-      if(!data) {
-        
-        this.router.navigate(['/'])
-        return null
-      }
-        return data
-    }))
+  /** === Actualizar título === */
+  updateClip(id: string, title: string) {
+    return updateDoc(doc(this.clipsCollection, id), {
+      title,
+    } as Partial<IClip>);
+  }
 
+  /** === Borrar clip y screenshot del Storage + doc de Firestore === */
+  async deleteClip(clip: IClip) {
+    const clipRef = storageRef(this.storage, `clips/${clip.fileName}`);
+    const screenshotRef = storageRef(
+      this.storage,
+      `screenshots/${clip.screenshotFileName}`
+    );
+
+    await deleteObject(clipRef).catch(() => {});
+    await deleteObject(screenshotRef).catch(() => {});
+    await deleteDoc(doc(this.clipsCollection, clip.docID!));
+  }
+
+  /** === Feed con paginación infinita (6 por página) === */
+  async getClips() {
+    if (this.pendingReq) return;
+    this.pendingReq = true;
+
+    let q = query(this.clipsCollection, orderBy('timestamp', 'desc'), limit(6));
+
+    const { length } = this.pageClips;
+    if (length) {
+      const lastDocID = this.pageClips[length - 1].docID!;
+      const lastSnap = await getDoc(doc(this.clipsCollection, lastDocID));
+      q = query(
+        this.clipsCollection,
+        orderBy('timestamp', 'desc'),
+        startAfter(lastSnap),
+        limit(6)
+      );
+    }
+
+    const snapshot = await getDocs(q);
+    snapshot.forEach((d) =>
+      this.pageClips.push({ docID: d.id, ...(d.data() as IClip) })
+    );
+
+    this.pendingReq = false;
+  }
+
+  /** === Resolver para ruta /clip/:id === */
+  resolve(route: ActivatedRouteSnapshot, _state: RouterStateSnapshot) {
+    const id = route.params['id'];
+    return from(getDoc(doc(this.clipsCollection, id))).pipe(
+      map((snap) => {
+        if (!snap.exists()) {
+          this.router.navigate(['/']);
+          return null;
+        }
+        return { docID: snap.id, ...(snap.data() as IClip) };
+      })
+    );
   }
 }
