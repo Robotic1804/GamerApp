@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -11,41 +11,73 @@ import { ModalService } from '../services/modal.service';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css'],
 })
-export class NavComponent {
+export class NavComponent implements OnDestroy {
   isMobileMenuOpen = false;
 
-  constructor(
-    public auth: AuthService,
-    public modal: ModalService // 👈 FALTABA ESTO
-  ) {}
+  constructor(public auth: AuthService, public modal: ModalService) {}
 
   toggleMobileMenu(): void {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
-
-    // Prevenir scroll cuando el menú está abierto
-    if (this.isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+    // Si hay un modal abierto, cerrarlo primero
+    if (this.modal.isAnyModalOpen()) {
+      this.modal.closeAllModals();
+      return;
     }
+
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    this.updateBodyOverflow();
   }
 
   closeMobileMenu(): void {
     this.isMobileMenuOpen = false;
-    document.body.style.overflow = '';
+    this.updateBodyOverflow();
   }
 
   openModal(event: Event): void {
     event.preventDefault();
-    this.modal.toggleModal('auth'); // 👈 FALTABA ESTO - Abre el modal
-    this.closeMobileMenu();
-  }
+    event.stopPropagation();
 
-  // Bonus: Cerrar menú móvil al cambiar a desktop
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    if (event.target.innerWidth >= 768) {
+    // Cerrar menú móvil si está abierto
+    if (this.isMobileMenuOpen) {
       this.closeMobileMenu();
     }
+
+    // Pequeño delay para suavizar la transición
+    setTimeout(
+      () => {
+        this.modal.toggleModal('auth');
+      },
+      this.isMobileMenuOpen ? 100 : 0
+    );
+  }
+
+  // Método centralizado para manejar overflow
+  private updateBodyOverflow(): void {
+    // Solo el menú móvil maneja overflow aquí
+    // El modal lo maneja desde su servicio
+    if (this.isMobileMenuOpen && !this.modal.isAnyModalOpen()) {
+      document.body.style.overflow = 'hidden';
+    } else if (!this.modal.isAnyModalOpen()) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (event.target.innerWidth >= 768 && this.isMobileMenuOpen) {
+      this.closeMobileMenu();
+    }
+  }
+
+  // Cerrar menú al presionar ESC
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    if (this.isMobileMenuOpen) {
+      this.closeMobileMenu();
+    }
+  }
+
+  // Limpiar al destruir el componente
+  ngOnDestroy() {
+    document.body.style.overflow = '';
   }
 }

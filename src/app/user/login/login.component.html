@@ -1,57 +1,105 @@
-<!-- Login Form -->
-<div class="w-full max-w-md mx-auto px-4 py-6 sm:px-6">
+<!-- Login Form with Glassmorphism -->
+<div class="w-full max-w-md mx-auto px-4 py-6 sm:px-6 
+            bg-gradient-to-br from-indigo-900/30 via-purple-900/25 to-indigo-800/30 
+            backdrop-blur-xl backdrop-saturate-150
+            border border-white/20 rounded-2xl
+            shadow-[0_8px_32px_0_rgba(99,102,241,0.25)]">
   <form #loginForm="ngForm" (ngSubmit)="login()">
     
     <!-- Email Field -->
     <div class="mb-4 sm:mb-5">
-      <label for="login-email" class="block text-sm font-medium text-gray-200 mb-2">
+      <label for="login-email" class="block text-sm font-semibold text-indigo-200 mb-2">
         Email
       </label>
-      <input 
-        id="login-email"
-        name="email"
-        [(ngModel)]="credentials.emails"
-        #email="ngModel"
-        type="email"
-        required
-        email
-        class="block w-full py-2 sm:py-2.5 px-3 sm:px-4 text-gray-200 border border-gray-400 transition duration-500 focus:outline-none rounded bg-transparent focus:border-indigo-400 text-sm sm:text-base"
-        placeholder="Enter Email"
-        autocomplete="email"
-      />
+      <div class="relative">
+        <input 
+          id="login-email"
+          name="email"
+          [(ngModel)]="credentials.emails"
+          #email="ngModel"
+          type="email"
+          required
+          email
+          class="block w-full py-3 sm:py-3.5 px-4 sm:px-5 pr-12 text-white placeholder-white/50
+                 bg-white/15 backdrop-blur-md
+                 border border-white/30
+                 rounded-xl
+                 transition-all duration-300
+                 focus:outline-none focus:ring-2 focus:ring-indigo-400/60 focus:border-indigo-400/60
+                 hover:bg-white/20 hover:border-white/40
+                 shadow-[inset_0_2px_8px_rgba(0,0,0,0.3)]
+                 text-sm sm:text-base"
+          [class.border-red-400/60]="email.touched && email.invalid"
+          [class.focus:ring-red-400/50]="email.touched && email.invalid"
+          [class.border-green-400/60]="email.touched && email.valid"
+          [class.focus:ring-green-400/50]="email.touched && email.valid"
+          placeholder="Enter Email"
+          autocomplete="email"
+        />
+        <span class="material-icons absolute right-4 top-1/2 transform -translate-y-1/2 text-indigo-300/50 pointer-events-none">
+          email
+        </span>
+      </div>
       @if (email.touched && email.dirty) {
         @if (email.errors?.['required']) {
-          <p class="text-red-400 text-xs sm:text-sm mt-1">Email is required</p>
+          <p class="text-red-300 text-xs sm:text-sm mt-2 flex items-center gap-1.5">
+            <span class="material-icons text-sm">error</span>
+            Email is required
+          </p>
         }
         @if (email.errors?.['email']) {
-          <p class="text-red-400 text-xs sm:text-sm mt-1">Please enter a valid email</p>
+          <p class="text-red-300 text-xs sm:text-sm mt-2 flex items-center gap-1.5">
+            <span class="material-icons text-sm">error</span>
+            Please enter a valid email
+          </p>
         }
       }
     </div>
 
     <!-- Password Field -->
     <div class="mb-5 sm:mb-6">
-      <label for="login-password" class="block text-sm font-medium text-gray-200 mb-2">
+      <label for="login-password" class="block text-sm font-semibold text-indigo-200 mb-2">
         Password
       </label>
-      <input 
-        id="login-password"
-        name="password"
-        [(ngModel)]="credentials.password"
-        #password="ngModel"
-        type="password"
-        required
-        minlength="6"
-        class="block w-full py-2 sm:py-2.5 px-3 sm:px-4 text-gray-200 border border-gray-400 transition duration-500 focus:outline-none rounded bg-transparent focus:border-indigo-400 text-sm sm:text-base"
-        placeholder="Password"
-        autocomplete="current-password"
-      />
+      <div class="relative">
+        <input 
+          id="login-password"
+          name="password"
+          [(ngModel)]="credentials.password"
+          #password="ngModel"
+          type="password"
+          required
+          minlength="6"
+          class="block w-full py-3 sm:py-3.5 px-4 sm:px-5 pr-12 text-white placeholder-white/40
+                 bg-white/10 backdrop-blur-sm
+                 border border-white/20
+                 rounded-xl
+                 transition-all duration-300
+                 focus:outline-none focus:ring-2 focus:ring-indigo-400/50 focus:border-indigo-400/50
+                 hover:bg-white/15
+                 shadow-inner
+                 text-sm sm:text-base"
+          [class.border-red-400/60]="password.touched && password.invalid"
+          [class.focus:ring-red-400/50]="password.touched && password.invalid"
+          [class.border-green-400/60]="password.touched && password.valid"
+          [class.focus:ring-green-400/50]="password.touched && password.valid"
+          placeholder="Password"
+          autocomplete="current-password"
+        />
+        <span class="material-icons absolute right-4 top-1/2 transform -translate-y-1/2 text-indigo-300/50 pointer-events-none">
+          lock
+        </span>
+      </div>
       @if (password.touched && password.dirty) {
         @if (password.errors?.['required']) {
-          <p class="text-red-400 text-xs sm:text-sm mt-1">Password is required</p>
+          <p class="text-red-300 text-xs sm:text-sm mt-2 flex items-center gap-1.5">
+            <span class="material-icons text-sm">error</span>
+            Password is required
+          </p>
         }
         @if (password.errors?.['minlength']) {
-          <p class="text-red-400 text-xs sm:text-sm mt-1">
+          <p class="text-red-300 text-xs sm:text-sm mt-2 flex items-center gap-1.5">
+            <span class="material-icons text-sm">error</span>
             Password must be at least 6 characters
           </p>
         }
@@ -62,7 +110,14 @@
     <button 
       type="submit"
       [disabled]="loginForm.invalid || inSubmission"
-      class="w-full py-2.5 sm:py-3 px-4 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium rounded transition duration-300 text-sm sm:text-base shadow-lg hover:shadow-xl"
+      class="w-full py-3 sm:py-4 px-4 
+             rounded-xl 
+             text-white font-bold 
+             transition-all duration-300
+             text-sm sm:text-base"
+      [class]="loginForm.invalid || inSubmission 
+        ? 'bg-gray-500/50 border border-gray-500/30 cursor-not-allowed' 
+        : 'bg-gradient-to-r from-indigo-500/80 to-purple-500/80 hover:from-indigo-500 hover:to-purple-500 active:from-indigo-600 active:to-purple-600 backdrop-blur-sm border border-indigo-400/50 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-[1.02] active:scale-[0.98]'"
     >
       @if (inSubmission) {
         <span class="flex items-center justify-center gap-2">
@@ -77,27 +132,41 @@
       }
     </button>
 
-    <!-- Alert Messages -->
+    <!-- Alert Messages with Glassmorphism -->
     @if (showAlert) {
       <div 
-        class="mt-4 p-3 sm:p-4 rounded text-sm sm:text-base transition-all duration-300"
+        class="mt-5 p-4 sm:p-5 rounded-xl text-sm sm:text-base 
+               transition-all duration-300
+               backdrop-blur-md border shadow-lg"
         [ngClass]="{
-          'bg-blue-400': alertColor === 'blue',
-          'bg-green-400': alertColor === 'green',
-          'bg-red-400': alertColor === 'red'
+          'bg-blue-500/30 border-blue-400/50 shadow-blue-500/20': alertColor === 'blue',
+          'bg-green-500/30 border-green-400/50 shadow-green-500/20': alertColor === 'green',
+          'bg-red-500/30 border-red-400/50 shadow-red-500/20': alertColor === 'red'
         }"
         role="alert"
       >
-        <p class="text-white">{{ alertMsg }}</p>
+        <div class="flex items-start gap-3">
+          @if (alertColor === 'blue') {
+            <span class="material-icons text-xl mt-0.5 text-blue-200">info</span>
+          } @else if (alertColor === 'green') {
+            <span class="material-icons text-xl mt-0.5 text-green-200">check_circle</span>
+          } @else {
+            <span class="material-icons text-xl mt-0.5 text-red-200">error</span>
+          }
+          <p class="text-white font-medium flex-1">{{ alertMsg }}</p>
+        </div>
       </div>
     }
 
-    <!-- Forgot Password Link (Opcional) -->
-    <div class="mt-4 text-center">
+    <!-- Forgot Password Link -->
+    <div class="mt-5 text-center">
       <a 
         href="#" 
-        class="text-xs sm:text-sm text-indigo-400 hover:text-indigo-300 transition-colors duration-200"
+        class="text-xs sm:text-sm text-indigo-300 hover:text-indigo-200 
+               transition-colors duration-200 hover:underline
+               inline-flex items-center gap-1"
       >
+        <span class="material-icons text-sm">lock_reset</span>
         Forgot your password?
       </a>
     </div>
