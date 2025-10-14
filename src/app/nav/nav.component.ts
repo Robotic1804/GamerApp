@@ -36,12 +36,11 @@ export class NavComponent implements OnDestroy {
     event.preventDefault();
     event.stopPropagation();
 
-    // Cerrar menú móvil si está abierto
+
     if (this.isMobileMenuOpen) {
       this.closeMobileMenu();
     }
 
-    // Pequeño delay para suavizar la transición
     setTimeout(
       () => {
         this.modal.toggleModal('auth');
@@ -50,10 +49,9 @@ export class NavComponent implements OnDestroy {
     );
   }
 
-  // Método centralizado para manejar overflow
+
   private updateBodyOverflow(): void {
-    // Solo el menú móvil maneja overflow aquí
-    // El modal lo maneja desde su servicio
+
     if (this.isMobileMenuOpen && !this.modal.isAnyModalOpen()) {
       document.body.style.overflow = 'hidden';
     } else if (!this.modal.isAnyModalOpen()) {

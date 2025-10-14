@@ -1,9 +1,18 @@
 <!-- Intro Section -->
-
 <section class="relative overflow-hidden mb-2 min-h-screen md:min-h-[600px]"> 
   <!-- The video -->
-  <video autoplay muted loop playsinline class="w-full h-full object-cover absolute z-0 inset-0">
+  <video 
+    #heroVideo
+    autoplay 
+    muted 
+    loop 
+    playsinline 
+    preload="auto"
+    [muted]="true"
+    class="w-full h-full object-cover absolute z-0 inset-0">
     <source src="assets/video/hero.webm" type="video/webm">
+    <!-- Fallback para navegadores que no soporten WebM -->
+    <source src="assets/video/hero.mp4" type="video/mp4">
   </video>
 
   <div class="bg-gradient absolute w-full h-full z-40 opacity-60"></div>
@@ -21,11 +30,11 @@
   <div class="container mx-auto relative z-50 flex items-center justify-center min-h-screen md:min-h-[600px]">
     <div class="text-center px-4 sm:px-8 md:px-12 lg:px-20 py-20 md:py-40 lg:py-60 w-full md:w-10/12 lg:w-8/12 mx-auto">
       <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold uppercase mb-4 md:mb-6 leading-tight">
-     Record. Refine. Share.
+        Record. Refine. Share.
       </h1>
       <p class="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed">
         Empowering gamers to transform every moment into a masterpiece.  
-       With our next-gen clipping tools, sharing your best plays has never been faster, smoother, or easier.
+        With our next-gen clipping tools, sharing your best plays has never been faster, smoother, or easier.
       </p>
     </div>
   </div>
