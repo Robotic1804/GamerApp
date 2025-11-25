@@ -25,7 +25,9 @@ GamerApp is an interactive gaming application platform built with Angular 20. Fe
 ![Angular](https://img.shields.io/badge/Angular%2020-DD0031?style=flat-square&logo=angular&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![RxJS](https://img.shields.io/badge/RxJS-B7178C?style=flat-square&logo=reactivex&logoColor=white)
-![Bootstrap 5](https://img.shields.io/badge/Bootstrap%205-7952B3?style=flat-square&logo=bootstrap&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black)
+
 
 ## Features
 
@@ -52,7 +54,7 @@ GamerApp is an interactive gaming application platform built with Angular 20. Fe
 ### Prerequisites
 - Node.js v18+
 - Angular CLI 20+
-- npm or yarn
+- npm 
 
 ### Installation
 ```bash
