@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { Observable, of, delay, map, filter, switchMap } from 'rxjs';
+import { Observable, of, delay, map, filter, switchMap, from } from 'rxjs';
 
 // 🔐 Auth (modular)
 import {
@@ -11,6 +11,7 @@ import {
   updateProfile,
   signOut,
   UserCredential,
+  reload,
 } from '@angular/fire/auth';
 
 // 🔥 Firestore (modular)
@@ -20,6 +21,7 @@ import {
   CollectionReference,
   doc,
   setDoc,
+  getDoc,
 } from '@angular/fire/firestore';
 
 import IUser from '../models/user.model';
@@ -31,6 +33,7 @@ export class AuthService {
 
   public isAuthenticated$: Observable<boolean>;
   public isAuthenticatedWithDelay$: Observable<boolean>;
+  public currentUser$: Observable<any>; // Observable del usuario actual con displayName
   private redirect = false;
 
   constructor(
@@ -48,6 +51,33 @@ export class AuthService {
     // auth.user -> authState(this.auth)
     this.isAuthenticated$ = authState(this.auth).pipe(map((user) => !!user));
     this.isAuthenticatedWithDelay$ = this.isAuthenticated$.pipe(delay(1000));
+
+    // Observable del usuario actual con fallback a Firestore para displayName
+    this.currentUser$ = authState(this.auth).pipe(
+      switchMap(async (user) => {
+        if (!user) return null;
+
+        // Si ya tiene displayName, retornar el usuario tal cual
+        if (user.displayName) return user;
+
+        // Si no tiene displayName, consultar Firestore para obtener el nombre
+        try {
+          const userDoc = await getDoc(doc(this.usersCollection, user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            // Crear un objeto con displayName del documento de Firestore
+            return {
+              ...user,
+              displayName: userData.name || null,
+            };
+          }
+        } catch (error) {
+          console.warn('Error obteniendo datos de usuario desde Firestore:', error);
+        }
+
+        return user;
+      })
+    );
 
     // Router guard con data.authOnly
     this.router.events
@@ -88,6 +118,9 @@ export class AuthService {
 
     // userCred.user.updateProfile(...) -> updateProfile(userCred.user, {...})
     await updateProfile(userCred.user, { displayName: userData.name });
+
+    // Recargar el usuario para que el displayName se sincronice con currentUser$
+    await reload(userCred.user);
   }
 
   // === Logout (modular) ===

@@ -68,7 +68,7 @@ export class NavComponent implements OnDestroy {
 
   // Cerrar menú al presionar ESC
   @HostListener('document:keydown.escape', ['$event'])
-  onEscapeKey(event: KeyboardEvent) {
+  onEscapeKey(event?: KeyboardEvent) {
     if (this.isMobileMenuOpen) {
       this.closeMobileMenu();
     }

@@ -102,9 +102,28 @@
         </li>
       </ul>
 
-      <!-- Right Section: Language + Logout -->
+      <!-- Right Section: User Info + Language + Logout -->
       <div class="flex items-center gap-3">
-        
+
+        <!-- User Info Display (solo si está autenticado) -->
+        @if (auth.isAuthenticated$ | async) {
+          <div class="flex items-center gap-2 px-4 py-2.5 rounded-xl
+                      bg-gradient-to-r from-indigo-500/10 to-purple-500/10
+                      backdrop-blur-sm border border-indigo-400/30
+                      shadow-lg shadow-indigo-500/10">
+            <div class="w-9 h-9 rounded-full
+                        bg-gradient-to-br from-indigo-400 to-purple-500
+                        flex items-center justify-center
+                        shadow-lg shadow-indigo-500/30
+                        border-2 border-white/20">
+              <span class="material-icons text-white text-lg">person</span>
+            </div>
+            <span class="text-white font-semibold text-sm">
+              {{ (auth.currentUser$ | async)?.displayName || 'User' }}
+            </span>
+          </div>
+        }
+
         <!-- Language Selector Premium -->
         <div class="relative group">
           <button type="button"
@@ -227,6 +246,29 @@
     </div>
 
     <nav class="flex-1 px-4 py-6">
+      <!-- User Profile Section (Mobile) -->
+      @if (auth.isAuthenticated$ | async) {
+        <div class="mb-6 p-4 rounded-2xl
+                    bg-gradient-to-br from-indigo-500/20 via-purple-500/15 to-indigo-400/20
+                    backdrop-blur-sm border border-indigo-400/30
+                    shadow-lg shadow-indigo-500/20">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full
+                        bg-gradient-to-br from-indigo-400 to-purple-500
+                        flex items-center justify-center
+                        shadow-lg shadow-indigo-500/40
+                        border-2 border-white/30">
+              <span class="material-icons text-white text-2xl">person</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-white font-bold text-lg leading-tight truncate">
+                {{ (auth.currentUser$ | async)?.displayName || 'User' }}
+              </p>
+            </div>
+          </div>
+        </div>
+      }
+
       <div class="mb-6">
         @if (!(auth.isAuthenticated$ | async)) {
           <a 
@@ -354,7 +396,7 @@
 
     <div class="p-4 border-t border-white/10 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 backdrop-blur-md">
       <p class="text-[10px] text-indigo-200/60 text-center leading-relaxed font-medium">
-        © 2024 Clipz. All rights reserved.
+        © 2025 Clipz. All rights reserved.
       </p>
     </div>
   </div>

@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class LoginComponent {
   credentials = {
-    emails: '',
+    email: '',
     password: '',
   };
 
@@ -34,7 +34,7 @@ export class LoginComponent {
     try {
       await signInWithEmailAndPassword(
         this.auth,
-        this.credentials.emails,
+        this.credentials.email,
         this.credentials.password
       );
 

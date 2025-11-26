@@ -29,7 +29,7 @@ export class ModalService {
     return !!this.modals.find((element) => element.id === id)?.visible;
   }
 
-  // Verifica si HAY ALGÚN modal abierto
+
   isAnyModalOpen(): boolean {
     return this.modals.some((modal) => modal.visible);
   }
@@ -42,7 +42,7 @@ export class ModalService {
     }
   }
 
-  // Método para cerrar un modal específico
+
   closeModal(id: string) {
     const modal = this.modals.find((element) => element.id === id);
     if (modal) {
@@ -51,7 +51,7 @@ export class ModalService {
     }
   }
 
-  // Método para cerrar todos los modales
+
   closeAllModals() {
     this.modals.forEach((modal) => (modal.visible = false));
     this.updateBodyOverflow();

@@ -42,9 +42,24 @@ export class ClipService implements Resolve<IClip | null> {
   /** Colección modular tipada */
   public clipsCollection: CollectionReference<IClip>;
 
-  /** Estado de paginación (igual que antes) */
-  pageClips: IClip[] = [];
-  pendingReq = false;
+  /** Estado de paginación - Mejor práctica: privado con getters */
+  private _pageClips: IClip[] = [];
+  private _pendingReq = false;
+
+  // Getters públicos
+  get pageClips(): IClip[] {
+    return this._pageClips;
+  }
+
+  get pendingReq(): boolean {
+    return this._pendingReq;
+  }
+
+  // Método para resetear paginación
+  resetPageClips(): void {
+    this._pageClips = [];
+    this._pendingReq = false;
+  }
 
   constructor(
     private db: Firestore,
@@ -97,21 +112,35 @@ export class ClipService implements Resolve<IClip | null> {
       `screenshots/${clip.screenshotFileName}`
     );
 
-    await deleteObject(clipRef).catch(() => {});
-    await deleteObject(screenshotRef).catch(() => {});
+    // Manejo robusto de errores con logging
+    try {
+      await deleteObject(clipRef);
+    } catch (error) {
+      console.error(`Error eliminando video ${clip.fileName}:`, error);
+      // Continuar aunque falle la eliminación del video
+    }
+
+    try {
+      await deleteObject(screenshotRef);
+    } catch (error) {
+      console.error(`Error eliminando screenshot ${clip.screenshotFileName}:`, error);
+      // Continuar aunque falle la eliminación del screenshot
+    }
+
+    // Eliminar documento de Firestore (crítico - propagar error si falla)
     await deleteDoc(doc(this.clipsCollection, clip.docID!));
   }
 
   /** === Feed con paginación infinita (6 por página) === */
   async getClips() {
-    if (this.pendingReq) return;
-    this.pendingReq = true;
+    if (this._pendingReq) return;
+    this._pendingReq = true;
 
     let q = query(this.clipsCollection, orderBy('timestamp', 'desc'), limit(6));
 
-    const { length } = this.pageClips;
+    const { length } = this._pageClips;
     if (length) {
-      const lastDocID = this.pageClips[length - 1].docID!;
+      const lastDocID = this._pageClips[length - 1].docID!;
       const lastSnap = await getDoc(doc(this.clipsCollection, lastDocID));
       q = query(
         this.clipsCollection,
@@ -123,10 +152,10 @@ export class ClipService implements Resolve<IClip | null> {
 
     const snapshot = await getDocs(q);
     snapshot.forEach((d) =>
-      this.pageClips.push({ docID: d.id, ...(d.data() as IClip) })
+      this._pageClips.push({ docID: d.id, ...(d.data() as IClip) })
     );
 
-    this.pendingReq = false;
+    this._pendingReq = false;
   }
 
   /** === Resolver para ruta /clip/:id === */

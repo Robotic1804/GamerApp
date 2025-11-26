@@ -9,7 +9,8 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { appRoutes } from './app.routes';
 import { SHARE_CORE_PROVIDER } from './shared/shared-core';
-import { environment } from '../environments/environment.prod';
+
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,7 +25,7 @@ export const appConfig: ApplicationConfig = {
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()),
 
-    // Shared core providers (al final para poder sobrescribir si es necesario)
+
     ...SHARE_CORE_PROVIDER,
   ],
 };

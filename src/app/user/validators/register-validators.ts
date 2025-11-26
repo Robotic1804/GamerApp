@@ -8,7 +8,8 @@ export class RegisterValidators {
 
             if (!control || !matchingControl) {
                 console.error('Form controls can not be found in the form group.')
-                return { controlNotFound: false }
+                // Corregido: debe retornar true cuando hay error
+                return { controlNotFound: true }
             }
 
             const error = control.value === matchingControl.value ?

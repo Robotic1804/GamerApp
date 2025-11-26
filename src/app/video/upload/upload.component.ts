@@ -1,5 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, DestroyRef, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { v4 as uuid } from 'uuid';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -21,6 +22,7 @@ import { serverTimestamp } from '@angular/fire/firestore';
 import { ClipService } from 'src/app/services/clip.service';
 import { Router } from '@angular/router';
 import { FfmpegService } from 'src/app/services/ffmpeg.service';
+import { EventBlockerDirective } from 'src/app/shared/directives/event-blocker.directive';
 import IClip from 'src/app/models/clip.model';
 
 @Component({
@@ -28,7 +30,7 @@ import IClip from 'src/app/models/clip.model';
   standalone: true,
   templateUrl: './upload.component.html',
   styleUrls: ['./upload.component.css'],
-  imports: [...SharedUI, ...SharedCore, SafeURLPipe],
+  imports: [...SharedUI, ...SharedCore, SafeURLPipe, EventBlockerDirective],
 })
 export class UploadComponent implements OnDestroy {
   isDragover = false;
@@ -61,18 +63,27 @@ export class UploadComponent implements OnDestroy {
   private clipProgress$ = new BehaviorSubject<number>(0);
   private screenshotProgress$ = new BehaviorSubject<number>(0);
 
-  constructor(
-    private storage: Storage,
-    private auth: Auth,
-    private clipsService: ClipService,
-    private router: Router,
-    public ffmpegService: FfmpegService
-  ) {
-    authState(this.auth).subscribe((user) => (this.user = user));
+  // Angular 20: inject() function - Mejor práctica moderna
+  private storage = inject(Storage);
+  private auth = inject(Auth);
+  private clipsService = inject(ClipService);
+  private router = inject(Router);
+  public ffmpegService = inject(FfmpegService);
+  private destroyRef = inject(DestroyRef);
+
+  constructor() {
+    // Angular 20: takeUntilDestroyed - Cleanup automático
+    authState(this.auth)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((user) => (this.user = user));
+
     this.ffmpegService.init();
 
     combineLatest([this.clipProgress$, this.screenshotProgress$])
-      .pipe(map(([c, s]) => (c + s) / 2))
+      .pipe(
+        map(([c, s]) => (c + s) / 2),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((pct) => (this.percentage = pct));
   }
 
@@ -178,7 +189,7 @@ export class UploadComponent implements OnDestroy {
         url: clipURL,
         screenshotURL,
         screenshotFileName: `${clipFileName}.png`,
-        timestamp: serverTimestamp() as any,
+        timestamp: serverTimestamp(),
       };
 
       const clipDocRef = await this.clipsService.createClip(clip as IClip);

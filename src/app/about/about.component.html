@@ -127,8 +127,9 @@
         Join thousands of creators who are already sharing their passion with the world through Clipz.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <a 
-          routerLink="/upload" 
+        <a
+          href="#"
+          (click)="handleStartUploading($event)"
           class="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium rounded-lg transition duration-300 text-sm sm:text-base shadow-lg hover:shadow-xl"
         >
           Start Uploading

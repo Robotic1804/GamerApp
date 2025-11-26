@@ -1,11 +1,18 @@
   <!-- Clips List -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <a *ngFor="let clip of clipService.pageClips" [routerLink]="['/', 'clip', clip.docID]"
-        class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300">
-  
-        <!-- Image -->
-        <img class="card-img-top rounded-tl-2xl w-full" [src]="clip.screenshotURL" crossorigin>
-  
+      @for (clip of clipService.pageClips; track clip.docID) {
+      <div class="mt-6 rounded-tl-2xl rounded-br-2xl shadow-xl bg-secondary transform hover:-translate-y-2 hover:shadow-2xl transition duration-300 flex flex-col">
+
+        <!-- Image con manejo de errores -->
+        <a [routerLink]="['/', 'clip', clip.docID]">
+          <img
+            class="card-img-top rounded-tl-2xl w-full"
+            [src]="clip.screenshotURL"
+            (error)="handleImageError($event)"
+            crossorigin
+            alt="{{clip.title}}">
+        </a>
+
         <!-- Shape -->
         <div class="relative">
           <div class="absolute pointer-events-none bottom-full w-full bg-secondary text-white">
@@ -17,27 +24,44 @@
             </div>
           </div>
         </div>
-  
+
         <!-- Body -->
-        <div class="p-8">
-  
+        <div class="p-8 flex-grow">
+
           <!-- Heading -->
           <h2 class="text-3xl mb-2">
-            {{clip.title}}
+            <a [routerLink]="['/', 'clip', clip.docID]" class="hover:text-indigo-400 transition">
+              {{clip.title}}
+            </a>
           </h2>
 
           <!-- Name & Date -->
           <p class="mb-0">
-            {{clip.displayName}} &#183; 
+            {{clip.displayName}} &#183;
             <span class="text-gray-400">
-              
               {{ clip.timestamp | fbTimestamp }}
-
             </span>
           </p>
-  
+
         </div>
-  
-      </a>
-      
+
+        <!-- Actions (solo visible para el dueño del video) -->
+        @if (isOwner(clip) | async) {
+        <div class="flex text-center text-2xl bg-gray-800 p-2 mt-auto">
+          <a (click)="openEditModal($event, clip)" href="#"
+             class="flex-1 p-2 border-right border-r-2 border-gray-700 transition hover:text-indigo-400"
+             title="Edit video">
+            <span class="material-icons text-base">build</span>
+          </a>
+          <a (click)="deleteClip($event, clip)" href="#"
+             class="flex-1 p-2 rounded-br-2xl transition hover:text-red-400"
+             title="Delete video">
+            <span class="material-icons text-base">delete</span>
+          </a>
+        </div>
+        }
+
+      </div>
+      }
+
     </div>

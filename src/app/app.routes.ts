@@ -21,7 +21,7 @@ export const appRoutes: Routes = [
       clip: ClipService,
     },
   },
-  // 👇 Agrega las rutas de video aquí (lazy loading)
+
   {
     path: '',
     loadChildren: () =>

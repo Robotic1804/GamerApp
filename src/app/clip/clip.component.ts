@@ -1,12 +1,11 @@
-import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Component, OnInit, ViewChild, ElementRef, ViewEncapsulation, DestroyRef, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import videojs from 'video.js';
 import IClip from '../models/clip.model';
 import { DatePipe } from '@angular/common';
 import { SharedCore } from '../shared/shared-core';
 import { SharedUI } from '../shared/shared-ui';
-
-
 
 @Component({
   selector: 'app-clip',
@@ -22,20 +21,24 @@ export class ClipComponent implements OnInit {
   player?: videojs.Player
   clip?: IClip
 
-  constructor(public route: ActivatedRoute) { }
+  
+  private route = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.player = videojs(this.target?.nativeElement)
 
-    this.route.data.subscribe(data => {
-      this.clip = data['clip'] as IClip
 
-      this.player?.src({
-        src: this.clip.url,
-        type: 'video/mp4'
+    this.route.data
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(data => {
+        this.clip = data['clip'] as IClip
+
+        this.player?.src({
+          src: this.clip.url,
+          type: 'video/mp4'
+        })
       })
-    })
   }
-
 }
 

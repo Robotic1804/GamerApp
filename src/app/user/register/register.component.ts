@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import IUser from 'src/app/models/user.model';
@@ -6,7 +6,6 @@ import { RegisterValidators } from '../validators/register-validators';
 import { EmailTaken } from '../validators/email-taken';
 import { SharedCore } from 'src/app/shared/shared-core';
 import { SharedUI } from 'src/app/shared/shared-ui';
-
 
 @Component({
   selector: 'app-register',
@@ -16,10 +15,9 @@ import { SharedUI } from 'src/app/shared/shared-ui';
   imports: [...SharedCore, ...SharedUI]
 })
 export class RegisterComponent {
-
-  constructor(private auth: AuthService,
-              private emailTaken: EmailTaken
-              ) {}
+  // Angular 20: inject() function - Mejor práctica moderna
+  private auth = inject(AuthService);
+  private emailTaken = inject(EmailTaken);
   inSubmission = false
 
   name= new FormControl('', [
@@ -38,8 +36,8 @@ export class RegisterComponent {
   ])
   password = new FormControl('', [
     Validators.required,
-    Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm)
-
+    // Corregido: Eliminar flags 'g' y 'm' innecesarios
+    Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
   ])
   comfirm_password = new FormControl('', [
     Validators.required
@@ -74,15 +72,14 @@ export class RegisterComponent {
    this.inSubmission = true
 
    try {
-     
-    await this.auth.createUser(this.registerForm.value as IUser)
-   } catch (e) {
-     
-     console.log(e)
-     this.alertMsg = 'An unexpected error ocurred. Please try again later'
+     await this.auth.createUser(this.registerForm.value as IUser)
+   } catch (error: unknown) {
+     // Mejor práctica: Tipado correcto de errores
+     console.error('Error creating user:', error)
+     this.alertMsg = 'An unexpected error occurred. Please try again later'
      this.alertColor = 'red'
      this.inSubmission = false
-     return 
+     return
    }
 
    this.alertMsg = 'Success! Your account has been created.'

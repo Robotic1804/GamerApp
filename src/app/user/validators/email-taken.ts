@@ -7,14 +7,19 @@ export class EmailTaken implements AsyncValidator {
   constructor(private auth: Auth) {}
 
   validate = (control: AbstractControl): Promise<ValidationErrors | null> => {
-    const email = (control.value ?? '').toString().trim();
+  
+    const email = (control.value ?? '').trim();
 
-    // Si está vacío, deja que 'required' u otros validators se encarguen
     if (!email) return Promise.resolve(null);
 
     return fetchSignInMethodsForEmail(this.auth, email)
       .then(methods => (methods.length ? { emailTaken: true } : null))
-      .catch(() => null); // evita romper el form si hay un error de red
+      .catch((error) => {
+       
+        console.error('Error validando email en Firebase:', error);
+      
+        return null;
+      });
   };
 }
 

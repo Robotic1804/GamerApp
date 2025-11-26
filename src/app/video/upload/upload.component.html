@@ -4,15 +4,19 @@
     <div class="font-bold mb-6">Upload Video</div>
 
     <ng-container>
-      <span *ngIf="!ffmpegService.isReady; else uploadEditorCtr"
-        class="material-icons text-center text-6xl p-8 animate-spin">
+      @if (!ffmpegService.isReady) {
+      <span class="material-icons text-center text-6xl p-8 animate-spin">
         settings
       </span>
+      } @else {
+        <ng-container [ngTemplateOutlet]="uploadEditorCtr"></ng-container>
+      }
     </ng-container>
 
     <ng-template #uploadEditorCtr>
        <!-- Upload Dropbox -->
-      <ng-container *ngIf="!nextStep; else uploadFormCtr">
+      @if (!nextStep) {
+      <ng-container>
         <div 
           app-event-blocker
           (dragend)="isDragover = false"
@@ -28,28 +32,36 @@
             border-gray-400 transition duration-500 hover:text-white
             hover:bg-indigo-400 hover:border-indigo-400 hover:border-solid text-xl">
           <h5>Drop your file here (mp4 only!)</h5>
-          <span *ngIf="ffmpegService.isRunning"
-            class="material-icons text-center text-6xl p-8 animate-spin">
+          @if (ffmpegService.isRunning) {
+          <span class="material-icons text-center text-6xl p-8 animate-spin">
             autorenew
           </span>
+          }
         </div>
-        <input type="file" class="mt-4" (change)="storeFile($event)">
+        <input type="file" class="mt-4 cursor-pointer" (change)="storeFile($event)">
       </ng-container>
+      } @else {
+        <ng-container [ngTemplateOutlet]="uploadFormCtr"></ng-container>
+      }
       
       <!-- Video Editor -->
       <ng-template #uploadFormCtr>
-        <app-alert *ngIf="showAlert" [color]="alertColor">
+        @if (showAlert) {
+        <app-alert [color]="alertColor">
           <p>{{ alertMsg }}</p>
-          <p *ngIf="showPercentage">{{ percentage | percent }}</p>
+          @if (showPercentage) {
+          <p>{{ percentage | percent }}</p>
+          }
         </app-alert>
+        }
 
         <!-- Form -->
         <form [formGroup]="uploadForm" (ngSubmit)="uploadFile()">
           <!-- Screenshots -->
           <h2 class="mb-4 text-xl">Select a Thumbnail</h2>
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div *ngFor="let screenshot of screenshots" 
-              class="border-8 cursor-pointer"
+            @for (screenshot of screenshots; track screenshot) {
+            <div class="border-8 cursor-pointer"
               [ngClass]="{
                 'border-green-400': screenshot === selectedScreenshot,
                 'border-transparent': screenshot !== selectedScreenshot
@@ -57,6 +69,7 @@
               (click)="selectedScreenshot = screenshot">
               <img [src]="screenshot | safeUrl">
             </div>
+            }
           </div>
 
           <!-- Title -->
@@ -69,14 +82,15 @@
           <!-- 👇 Botones: Cancelar y Publicar -->
           <div class="mt-4 flex justify-end gap-3">
             <!-- Botón Cancelar (solo visible durante la subida) -->
+            @if (inSubmission) {
             <button 
-              *ngIf="inSubmission"
               type="button"
               (click)="cancelUpload()"
               class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
               <span class="material-icons mr-1 text-sm">close</span>
               Cancel Upload
             </button>
+            }
 
             <!-- Botón Publicar -->
             <button 
@@ -87,11 +101,14 @@
               }"
               type="submit" 
               class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm rounded-md text-white bg-indigo-600 focus:outline-none">
-              <span *ngIf="!inSubmission">Publish</span>
-              <span *ngIf="inSubmission" class="flex items-center">
+              @if (!inSubmission) {
+              <span>Publish</span>
+              } @else {
+              <span class="flex items-center">
                 <span class="material-icons animate-spin mr-1 text-sm">refresh</span>
                 Uploading...
               </span>
+              }
             </button>
           </div>
         </form>
