@@ -334,7 +334,7 @@ This project is licensed under the MIT License.
 
 **Norman Navarro**
 - GitHub: [@Robotic1804](https://github.com/Robotic1804)
-- Email: norman18navarro@hotmail.com
+- Email: norman-navarro@norman-webdesigner.com
 
 ---
 
