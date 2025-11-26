@@ -1,102 +1,91 @@
 <!-- Header Premium Desktop (Sin tocar mobile) -->
-<header id="header" class="bg-secondary/95 backdrop-blur-md sticky top-0 z-[100] 
-                           border-b border-white/5 shadow-lg shadow-black/10">
-  <nav class="container mx-auto flex justify-between items-center py-3 md:py-5 px-4">
-    
+<header
+  id="header"
+  class="bg-secondary/95 backdrop-blur-md sticky top-0 z-[100] border-b border-white/5 shadow-lg shadow-black/10"
+>
+  <nav
+    class="container mx-auto flex justify-between items-center py-3 md:py-5 px-4"
+  >
     <!-- Logo con efecto glow -->
-    <a class="text-2xl md:text-3xl font-bold uppercase tracking-tight
-              bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 
-              bg-clip-text text-transparent
-              hover:scale-105 transition-transform duration-300
-              drop-shadow-[0_0_15px_rgba(129,140,248,0.5)]" 
-       routerLink="/" 
-       (click)="closeMobileMenu()">
+    <a
+      class="text-2xl md:text-3xl font-bold uppercase tracking-tight bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(129,140,248,0.5)]"
+      routerLink="/"
+      (click)="closeMobileMenu()"
+    >
       Clipz
     </a>
 
     <!-- ============================================
          DESKTOP NAVIGATION - PREMIUM VERSION
          ============================================ -->
-    <div class="hidden md:flex md:items-center md:gap-8 md:flex-1 md:justify-between md:ml-12">
-      
+    <div
+      class="hidden md:flex md:items-center md:gap-8 md:flex-1 md:justify-between md:ml-12"
+    >
       <!-- Navigation Links con glassmorphism -->
       <ul class="flex items-center gap-2">
         @if (!(auth.isAuthenticated$ | async)) {
-          <!-- Login/Register Button CTA -->
-          <li>
-            <a href="#" 
-               (click)="openModal($event)"
-               class="group relative px-6 py-2.5 rounded-xl
-                      bg-gradient-to-r from-indigo-500/80 to-purple-500/80 
-                      hover:from-indigo-500 hover:to-purple-500
-                      backdrop-blur-sm border border-indigo-400/50
-                      text-white font-semibold text-sm
-                      shadow-lg shadow-indigo-500/25 
-                      hover:shadow-indigo-500/40 hover:shadow-xl
-                      transition-all duration-300
-                      hover:scale-105 active:scale-95
-                      overflow-hidden">
-              <!-- Efecto de brillo animado -->
-              <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent 
-                           translate-x-[-100%] group-hover:translate-x-[100%] 
-                           transition-transform duration-700"></span>
-              <span class="relative flex items-center gap-2">
-                <span class="material-icons text-lg">login</span>
-                Login / Register
-              </span>
-            </a>
-          </li>
+        <!-- Login/Register Button CTA -->
+        <li>
+          <a
+            href="#"
+            (click)="openModal($event)"
+            class="group relative px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500/80 to-purple-500/80 hover:from-indigo-500 hover:to-purple-500 backdrop-blur-sm border border-indigo-400/50 text-white font-semibold text-sm shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 overflow-hidden"
+          >
+            <!-- Efecto de brillo animado -->
+            <span
+              class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
+            ></span>
+            <span class="relative flex items-center gap-2">
+              <span class="material-icons text-lg">login</span>
+              Login / Register
+            </span>
+          </a>
+        </li>
         } @else {
-          <!-- Links autenticado con efectos premium -->
-          <li>
-            <a routerLink="/manage" 
-               routerLinkActive="bg-indigo-500/20 border-indigo-400/60 text-indigo-300 shadow-indigo-500/20"
-               [routerLinkActiveOptions]="{exact:true}" 
-               [queryParams]="{sort:'1'}"
-               class="group flex items-center gap-2 px-5 py-2.5 rounded-xl
-                      bg-white/5 hover:bg-indigo-500/20
-                      backdrop-blur-sm border border-white/10 hover:border-indigo-400/50
-                      text-gray-300 hover:text-white
-                      font-medium text-sm
-                      transition-all duration-300
-                      hover:shadow-lg hover:shadow-indigo-500/20
-                      hover:scale-105">
-              <span class="material-icons text-lg group-hover:scale-110 transition-transform">video_library</span>
-              <span>Manage</span>
-            </a>
-          </li>
-          
-          <li>
-            <a routerLink="/upload" 
-               routerLinkActive="bg-indigo-500/20 border-indigo-400/60 text-indigo-300 shadow-indigo-500/20"
-               [routerLinkActiveOptions]="{exact:true}"
-               class="group flex items-center gap-2 px-5 py-2.5 rounded-xl
-                      bg-white/5 hover:bg-indigo-500/20
-                      backdrop-blur-sm border border-white/10 hover:border-indigo-400/50
-                      text-gray-300 hover:text-white
-                      font-medium text-sm
-                      transition-all duration-300
-                      hover:shadow-lg hover:shadow-indigo-500/20
-                      hover:scale-105">
-              <span class="material-icons text-lg group-hover:scale-110 transition-transform">cloud_upload</span>
-              <span>Upload</span>
-            </a>
-          </li>
+        <!-- Links autenticado con efectos premium -->
+        <li>
+          <a
+            routerLink="/manage"
+            routerLinkActive="bg-indigo-500/20 border-indigo-400/60 text-indigo-300 shadow-indigo-500/20"
+            [routerLinkActiveOptions]="{ exact: true }"
+            [queryParams]="{ sort: '1' }"
+            class="group flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-indigo-500/20 backdrop-blur-sm border border-white/10 hover:border-indigo-400/50 text-gray-300 hover:text-white font-medium text-sm transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/20 hover:scale-105"
+          >
+            <span
+              class="material-icons text-lg group-hover:scale-110 transition-transform"
+              >video_library</span
+            >
+            <span>Manage</span>
+          </a>
+        </li>
+
+        <li>
+          <a
+            routerLink="/upload"
+            routerLinkActive="bg-indigo-500/20 border-indigo-400/60 text-indigo-300 shadow-indigo-500/20"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="group flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-indigo-500/20 backdrop-blur-sm border border-white/10 hover:border-indigo-400/50 text-gray-300 hover:text-white font-medium text-sm transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/20 hover:scale-105"
+          >
+            <span
+              class="material-icons text-lg group-hover:scale-110 transition-transform"
+              >cloud_upload</span
+            >
+            <span>Upload</span>
+          </a>
+        </li>
         }
-        
+
         <!-- About Link -->
         <li>
-          <a routerLink="/about" 
-             routerLinkActive="bg-indigo-500/20 border-indigo-400/60 text-indigo-300 shadow-indigo-500/20"
-             class="group flex items-center gap-2 px-5 py-2.5 rounded-xl
-                    bg-white/5 hover:bg-indigo-500/20
-                    backdrop-blur-sm border border-white/10 hover:border-indigo-400/50
-                    text-gray-300 hover:text-white
-                    font-medium text-sm
-                    transition-all duration-300
-                    hover:shadow-lg hover:shadow-indigo-500/20
-                    hover:scale-105">
-            <span class="material-icons text-lg group-hover:scale-110 transition-transform">info</span>
+          <a
+            routerLink="/about"
+            routerLinkActive="bg-indigo-500/20 border-indigo-400/60 text-indigo-300 shadow-indigo-500/20"
+            class="group flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-indigo-500/20 backdrop-blur-sm border border-white/10 hover:border-indigo-400/50 text-gray-300 hover:text-white font-medium text-sm transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/20 hover:scale-105"
+          >
+            <span
+              class="material-icons text-lg group-hover:scale-110 transition-transform"
+              >info</span
+            >
             <span>About</span>
           </a>
         </li>
@@ -104,95 +93,95 @@
 
       <!-- Right Section: User Info + Language + Logout -->
       <div class="flex items-center gap-3">
-
         <!-- User Info Display (solo si está autenticado) -->
         @if (auth.isAuthenticated$ | async) {
-          <div class="flex items-center gap-2 px-4 py-2.5 rounded-xl
-                      bg-gradient-to-r from-indigo-500/10 to-purple-500/10
-                      backdrop-blur-sm border border-indigo-400/30
-                      shadow-lg shadow-indigo-500/10">
-            <div class="w-9 h-9 rounded-full
-                        bg-gradient-to-br from-indigo-400 to-purple-500
-                        flex items-center justify-center
-                        shadow-lg shadow-indigo-500/30
-                        border-2 border-white/20">
-              <span class="material-icons text-white text-lg">person</span>
-            </div>
-            <span class="text-white font-semibold text-sm">
-              {{ (auth.currentUser$ | async)?.displayName || 'User' }}
-            </span>
+        <div
+          class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500/10 to-purple-500/10 backdrop-blur-sm border border-indigo-400/30 shadow-lg shadow-indigo-500/10"
+        >
+          <div
+            class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 border-2 border-white/20"
+          >
+            <span class="material-icons text-white text-lg">person</span>
           </div>
+          <span class="text-white font-semibold text-sm">
+            {{ (auth.currentUser$ | async)?.displayName || "User" }}
+          </span>
+        </div>
         }
 
         <!-- Language Selector Premium -->
         <div class="relative group">
-          <button type="button"
-                  class="flex items-center gap-2 px-4 py-2.5 rounded-xl
-                         bg-white/5 hover:bg-white/10
-                         backdrop-blur-sm border border-white/10 hover:border-white/20
-                         text-gray-300 hover:text-white
-                         font-medium text-sm
-                         transition-all duration-300
-                         hover:shadow-lg hover:shadow-black/20">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA1CAMAAACA7r40AAAA/FBMVEWyIjNPN2Y8O27///8/PnBOTXxycpY9PG9RUX5HR3dIR3dLSnlPTny4uMpWVYFFRHVwb5VlZIx7e52DgqOIh6aIiKc+PXBJSHhTUn9hYYqyIjReXohgX4lYV4Lr6/C2tcjPdYB0c5haWYRYV4Nra5GJiac+PW/FxdTHYG1RUH3eoajltbtOTXvty89BQHHg3+hSUX6GYoC6usyVlbFycZa7u8yUk6+sq8FCQXO0tMe1tMhiYYpMS3pDQnNvbpTExNN8fJ7GxdTGxtWCgqLHx9WXlrLXi5SYl7Kiobrg4Oiiorrn5u3n5+2jo7ukpLvw8PTx8fX09Pf19firqsC5sMNxAAAAAnRSTlPQ9qN1Xw4AAAGlSURBVHhe7ZXFiiRBFEVjznvp5W7t7j3u7m7//y8D1dAMGbnI4jW5KOpsgjibCxFcrrtVEmcBGAGQJHB98d3EgEM/ygsg/nwRAy15rxQ4Ywh3JQX49hVgKA/Ad1hDkkGTMSQJjGkOEmo133FmwAEQyl8FfSj3gFgkzjsQAw6AZ796AP2fGcDBS8/ZQ7ZQlJ2d+bEFqp6zhuh9Cf9/pDtKkTs04KBTD4jgx3eICOodoshz1p7M6UUAUQ+Ap2Pf2UMI5UBBX18/Ut7ZQ84Jui10QKsbcA7dt77jxIBDt+sxMNzrD4HL+rZS4Iw9iTZkCjRFmsBUHkcUOGMI7dkpKezuQsrprM3zR76zN572ekdBX623gaONJ0d5B5sGHAA1+QTwRQJgX2Q/7+w9GZGlDZKERpoxgkbDc8s0WscGSo+WGMiNVlgwWuFNjdafPsDe7wzg3RvP2UNCFGVtbX6EoOo7PhgoO1rGnswHiquB4mqgfIcxpBTGkNslMf2JVMAShRxXgJtUwBKFbFbAqicL4U4qYNWThXCHFbDqyUK4swpY9WQhXBX8A2rVjaQ6HWXmAAAAAElFTkSuQmCC" 
-                 alt="English" 
-                 width="20" 
-                 height="13"
-                 class="rounded shadow-sm">
+          <button
+            type="button"
+            class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/20 text-gray-300 hover:text-white font-medium text-sm transition-all duration-300 hover:shadow-lg hover:shadow-black/20"
+          >
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA1CAMAAACA7r40AAAA/FBMVEWyIjNPN2Y8O27///8/PnBOTXxycpY9PG9RUX5HR3dIR3dLSnlPTny4uMpWVYFFRHVwb5VlZIx7e52DgqOIh6aIiKc+PXBJSHhTUn9hYYqyIjReXohgX4lYV4Lr6/C2tcjPdYB0c5haWYRYV4Nra5GJiac+PW/FxdTHYG1RUH3eoajltbtOTXvty89BQHHg3+hSUX6GYoC6usyVlbFycZa7u8yUk6+sq8FCQXO0tMe1tMhiYYpMS3pDQnNvbpTExNN8fJ7GxdTGxtWCgqLHx9WXlrLXi5SYl7Kiobrg4Oiiorrn5u3n5+2jo7ukpLvw8PTx8fX09Pf19firqsC5sMNxAAAAAnRSTlPQ9qN1Xw4AAAGlSURBVHhe7ZXFiiRBFEVjznvp5W7t7j3u7m7//y8D1dAMGbnI4jW5KOpsgjibCxFcrrtVEmcBGAGQJHB98d3EgEM/ygsg/nwRAy15rxQ4Ywh3JQX49hVgKA/Ad1hDkkGTMSQJjGkOEmo133FmwAEQyl8FfSj3gFgkzjsQAw6AZ796AP2fGcDBS8/ZQ7ZQlJ2d+bEFqp6zhuh9Cf9/pDtKkTs04KBTD4jgx3eICOodoshz1p7M6UUAUQ+Ap2Pf2UMI5UBBX18/Ut7ZQ84Jui10QKsbcA7dt77jxIBDt+sxMNzrD4HL+rZS4Iw9iTZkCjRFmsBUHkcUOGMI7dkpKezuQsrprM3zR76zN572ekdBX623gaONJ0d5B5sGHAA1+QTwRQJgX2Q/7+w9GZGlDZKERpoxgkbDc8s0WscGSo+WGMiNVlgwWuFNjdafPsDe7wzg3RvP2UNCFGVtbX6EoOo7PhgoO1rGnswHiquB4mqgfIcxpBTGkNslMf2JVMAShRxXgJtUwBKFbFbAqicL4U4qYNWThXCHFbDqyUK4swpY9WQhXBX8A2rVjaQ6HWXmAAAAAElFTkSuQmCC"
+              alt="English"
+              width="20"
+              height="13"
+              class="rounded shadow-sm"
+            />
             <span class="font-medium">EN</span>
-            <span class="material-icons text-sm transition-transform group-hover:rotate-180">expand_more</span>
+            <span
+              class="material-icons text-sm transition-transform group-hover:rotate-180"
+              >expand_more</span
+            >
           </button>
-          
+
           <!-- Dropdown (escondido por defecto, mostrar con JavaScript si necesitas) -->
-          <div class="absolute top-full right-0 mt-2 w-48 
-                      bg-gradient-to-br from-indigo-900/40 via-purple-900/35 to-indigo-800/40 
-                      backdrop-blur-xl backdrop-saturate-150
-                      border border-white/20 rounded-xl
-                      shadow-[0_8px_32px_0_rgba(99,102,241,0.3)]
-                      opacity-0 invisible group-hover:opacity-100 group-hover:visible
-                      transition-all duration-300
-                      overflow-hidden">
-            <a href="#" class="flex items-center gap-3 px-4 py-3
-                              bg-indigo-500/20 border-l-2 border-indigo-400
-                              text-white font-medium">
-              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA1CAMAAACA7r40AAAA/FBMVEWyIjNPN2Y8O27///8/PnBOTXxycpY9PG9RUX5HR3dIR3dLSnlPTny4uMpWVYFFRHVwb5VlZIx7e52DgqOIh6aIiKc+PXBJSHhTUn9hYYqyIjReXohgX4lYV4Lr6/C2tcjPdYB0c5haWYRYV4Nra5GJiac+PW/FxdTHYG1RUH3eoajltbtOTXvty89BQHHg3+hSUX6GYoC6usyVlbFycZa7u8yUk6+sq8FCQXO0tMe1tMhiYYpMS3pDQnNvbpTExNN8fJ7GxdTGxtWCgqLHx9WXlrLXi5SYl7Kiobrg4Oiiorrn5u3n5+2jo7ukpLvw8PTx8fX09Pf19firqsC5sMNxAAAAAnRSTlPQ9qN1Xw4AAAGlSURBVHhe7ZXFiiRBFEVjznvp5W7t7j3u7m7//y8D1dAMGbnI4jW5KOpsgjibCxFcrrtVEmcBGAGQJHB98d3EgEM/ygsg/nwRAy15rxQ4Ywh3JQX49hVgKA/Ad1hDkkGTMSQJjGkOEmo133FmwAEQyl8FfSj3gFgkzjsQAw6AZ796AP2fGcDBS8/ZQ7ZQlJ2d+bEFqp6zhuh9Cf9/pDtKkTs04KBTD4jgx3eICOodoshz1p7M6UUAUQ+Ap2Pf2UMI5UBBX18/Ut7ZQ84Jui10QKsbcA7dt77jxIBDt+sxMNzrD4HL+rZS4Iw9iTZkCjRFmsBUHkcUOGMI7dkpKezuQsrprM3zR76zN572ekdBX623gaONJ0d5B5sGHAA1+QTwRQJgX2Q/7+w9GZGlDZKERpoxgkbDc8s0WscGSo+WGMiNVlgwWuFNjdafPsDe7wzg3RvP2UNCFGVtbX6EoOo7PhgoO1rGnswHiquB4mqgfIcxpBTGkNslMf2JVMAShRxXgJtUwBKFbFbAqicL4U4qYNWThXCHFbDqyUK4swpY9WQhXBX8A2rVjaQ6HWXmAAAAAElFTkSuQmCC" 
-                   width="20" 
-                   height="13"
-                   class="rounded">
+          <div
+            class="absolute top-full right-0 mt-2 w-48 bg-gradient-to-br from-indigo-900/40 via-purple-900/35 to-indigo-800/40 backdrop-blur-xl backdrop-saturate-150 border border-white/20 rounded-xl shadow-[0_8px_32px_0_rgba(99,102,241,0.3)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden"
+          >
+            <a
+              href="#"
+              class="flex items-center gap-3 px-4 py-3 bg-indigo-500/20 border-l-2 border-indigo-400 text-white font-medium"
+            >
+              <img
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA1CAMAAACA7r40AAAA/FBMVEWyIjNPN2Y8O27///8/PnBOTXxycpY9PG9RUX5HR3dIR3dLSnlPTny4uMpWVYFFRHVwb5VlZIx7e52DgqOIh6aIiKc+PXBJSHhTUn9hYYqyIjReXohgX4lYV4Lr6/C2tcjPdYB0c5haWYRYV4Nra5GJiac+PW/FxdTHYG1RUH3eoajltbtOTXvty89BQHHg3+hSUX6GYoC6usyVlbFycZa7u8yUk6+sq8FCQXO0tMe1tMhiYYpMS3pDQnNvbpTExNN8fJ7GxdTGxtWCgqLHx9WXlrLXi5SYl7Kiobrg4Oiiorrn5u3n5+2jo7ukpLvw8PTx8fX09Pf19firqsC5sMNxAAAAAnRSTlPQ9qN1Xw4AAAGlSURBVHhe7ZXFiiRBFEVjznvp5W7t7j3u7m7//y8D1dAMGbnI4jW5KOpsgjibCxFcrrtVEmcBGAGQJHB98d3EgEM/ygsg/nwRAy15rxQ4Ywh3JQX49hVgKA/Ad1hDkkGTMSQJjGkOEmo133FmwAEQyl8FfSj3gFgkzjsQAw6AZ796AP2fGcDBS8/ZQ7ZQlJ2d+bEFqp6zhuh9Cf9/pDtKkTs04KBTD4jgx3eICOodoshz1p7M6UUAUQ+Ap2Pf2UMI5UBBX18/Ut7ZQ84Jui10QKsbcA7dt77jxIBDt+sxMNzrD4HL+rZS4Iw9iTZkCjRFmsBUHkcUOGMI7dkpKezuQsrprM3zR76zN572ekdBX623gaONJ0d5B5sGHAA1+QTwRQJgX2Q/7+w9GZGlDZKERpoxgkbDc8s0WscGSo+WGMiNVlgwWuFNjdafPsDe7wzg3RvP2UNCFGVtbX6EoOo7PhgoO1rGnswHiquB4mqgfIcxpBTGkNslMf2JVMAShRxXgJtUwBKFbFbAqicL4U4qYNWThXCHFbDqyUK4swpY9WQhXBX8A2rVjaQ6HWXmAAAAAElFTkSuQmCC"
+                width="20"
+                height="13"
+                class="rounded"
+              />
               <span>English</span>
-              <span class="material-icons text-sm ml-auto text-indigo-300">check</span>
+              <span class="material-icons text-sm ml-auto text-indigo-300"
+                >check</span
+              >
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3
-                              hover:bg-white/5 text-white/70 hover:text-white
-                              transition-colors duration-200 cursor-not-allowed opacity-50">
-              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAHlBMVEUpQqK2q8384OL3qa/tKTkAI5Wrt9z////5t7ztKTlzpJCAAAAABXRSTlP++vjs1BQWlgsAAAAxSURBVHgBYmRAA4yKaAJCAugqQgHtyzENAAAAAiD7pzaDr4MfRVEURVGU36IoipK5FLWNJ6UFusbWAAAAAElFTkSuQmCC" 
-                   width="20" 
-                   height="13"
-                   class="rounded">
+            <a
+              href="#"
+              class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 text-white/70 hover:text-white transition-colors duration-200 cursor-not-allowed opacity-50"
+            >
+              <img
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAHlBMVEUpQqK2q8384OL3qa/tKTkAI5Wrt9z////5t7ztKTlzpJCAAAAABXRSTlP++vjs1BQWlgsAAAAxSURBVHgBYmRAA4yKaAJCAugqQgHtyzENAAAAAiD7pzaDr4MfRVEURVGU36IoipK5FLWNJ6UFusbWAAAAAElFTkSuQmCC"
+                width="20"
+                height="13"
+                class="rounded"
+              />
               <span>French</span>
-              <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded ml-auto">SOON</span>
+              <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded ml-auto"
+                >SOON</span
+              >
             </a>
           </div>
         </div>
 
         <!-- Logout Button (solo si está autenticado) -->
         @if (auth.isAuthenticated$ | async) {
-          <!-- Divider vertical -->
-          <div class="h-8 w-px bg-white/10"></div>
-          
-          <a href="#" 
-             (click)="auth.logout($event)"
-             class="group flex items-center gap-2 px-4 py-2.5 rounded-xl
-                    bg-white/5 hover:bg-red-500/20
-                    backdrop-blur-sm border border-white/10 hover:border-red-400/50
-                    text-gray-300 hover:text-red-300
-                    font-medium text-sm
-                    transition-all duration-300
-                    hover:shadow-lg hover:shadow-red-500/20
-                    hover:scale-105">
-            <span class="material-icons text-lg group-hover:rotate-12 transition-transform">logout</span>
-            <span>Logout</span>
-          </a>
+        <!-- Divider vertical -->
+        <div class="h-8 w-px bg-white/10"></div>
+
+        <a
+          href="#"
+          (click)="auth.logout($event)"
+          class="group flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-red-500/20 backdrop-blur-sm border border-white/10 hover:border-red-400/50 text-gray-300 hover:text-red-300 font-medium text-sm transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 hover:scale-105"
+        >
+          <span
+            class="material-icons text-lg group-hover:rotate-12 transition-transform"
+            >logout</span
+          >
+          <span>Logout</span>
+        </a>
         }
       </div>
     </div>
@@ -200,15 +189,18 @@
     <!-- ============================================
          MOBILE MENU BUTTON (Sin cambios)
          ============================================ -->
-    <button 
+    <button
       type="button"
       (click)="toggleMobileMenu()"
       class="md:hidden text-white focus:outline-none z-[110] relative"
       [attr.aria-label]="isMobileMenuOpen ? 'Close menu' : 'Open menu'"
-      [attr.aria-expanded]="isMobileMenuOpen">
-      <span class="material-icons text-3xl transition-transform duration-300" 
-            [class.rotate-90]="isMobileMenuOpen">
-        {{ isMobileMenuOpen ? 'close' : 'menu' }}
+      [attr.aria-expanded]="isMobileMenuOpen"
+    >
+      <span
+        class="material-icons text-3xl transition-transform duration-300"
+        [class.rotate-90]="isMobileMenuOpen"
+      >
+        {{ isMobileMenuOpen ? "close" : "menu" }}
       </span>
     </button>
   </nav>
@@ -218,29 +210,32 @@
      MOBILE MENU (Sin cambios - mantener tal cual)
      ============================================ -->
 @if (isMobileMenuOpen) {
-  <div 
-    class="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[105] md:hidden pointer-events-auto md:pointer-events-none animate-fadeIn"
-    (click)="closeMobileMenu()">
-  </div>
+<div
+  class="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[105] md:hidden pointer-events-auto md:pointer-events-none animate-fadeIn"
+  (click)="closeMobileMenu()"
+></div>
 }
 
-<div 
-  class="fixed top-0 right-0 h-screen w-80 max-w-[85vw] z-[106] md:hidden transition-all duration-300 ease-out overflow-y-auto
-         bg-gradient-to-br from-indigo-900/30 via-purple-900/25 to-indigo-800/30 
-         backdrop-blur-xl backdrop-saturate-150
-         border-l border-white/10
-         shadow-[0_8px_32px_0_rgba(99,102,241,0.2)]"
+<div
+  class="fixed top-0 right-0 h-screen w-80 max-w-[85vw] z-[106] md:hidden transition-all duration-300 ease-out overflow-y-auto bg-gradient-to-br from-indigo-900/30 via-purple-900/25 to-indigo-800/30 backdrop-blur-xl backdrop-saturate-150 border-l border-white/10 shadow-[0_8px_32px_0_rgba(99,102,241,0.2)]"
   [class.translate-x-0]="isMobileMenuOpen"
   [class.translate-x-full]="!isMobileMenuOpen"
-  style="box-shadow: -10px 0 50px rgba(99, 102, 241, 0.15);">
-  
+  style="box-shadow: -10px 0 50px rgba(99, 102, 241, 0.15)"
+>
   <div class="flex flex-col min-h-full">
-    <div class="flex items-center justify-between p-6 border-b border-white/10 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 backdrop-blur-sm sticky top-0 z-10">
-      <h2 class="text-2xl font-bold text-white uppercase tracking-wider drop-shadow-lg">Clipz</h2>
-      <button 
+    <div
+      class="flex items-center justify-between p-6 border-b border-white/10 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 backdrop-blur-sm sticky top-0 z-10"
+    >
+      <h2
+        class="text-2xl font-bold text-white uppercase tracking-wider drop-shadow-lg"
+      >
+        Clipz
+      </h2>
+      <button
         type="button"
         (click)="closeMobileMenu()"
-        class="text-white/90 hover:text-white transition-all duration-200 p-2 rounded-lg hover:bg-white/10 backdrop-blur-sm">
+        class="text-white/90 hover:text-white transition-all duration-200 p-2 rounded-lg hover:bg-white/10 backdrop-blur-sm"
+      >
         <span class="material-icons text-2xl">close</span>
       </button>
     </div>
@@ -248,154 +243,173 @@
     <nav class="flex-1 px-4 py-6">
       <!-- User Profile Section (Mobile) -->
       @if (auth.isAuthenticated$ | async) {
-        <div class="mb-6 p-4 rounded-2xl
-                    bg-gradient-to-br from-indigo-500/20 via-purple-500/15 to-indigo-400/20
-                    backdrop-blur-sm border border-indigo-400/30
-                    shadow-lg shadow-indigo-500/20">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full
-                        bg-gradient-to-br from-indigo-400 to-purple-500
-                        flex items-center justify-center
-                        shadow-lg shadow-indigo-500/40
-                        border-2 border-white/30">
-              <span class="material-icons text-white text-2xl">person</span>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-white font-bold text-lg leading-tight truncate">
-                {{ (auth.currentUser$ | async)?.displayName || 'User' }}
-              </p>
-            </div>
+      <div
+        class="mb-6 p-4 rounded-2xl bg-gradient-to-br from-indigo-500/20 via-purple-500/15 to-indigo-400/20 backdrop-blur-sm border border-indigo-400/30 shadow-lg shadow-indigo-500/20"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/40 border-2 border-white/30"
+          >
+            <span class="material-icons text-white text-2xl">person</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-white font-bold text-lg leading-tight truncate">
+              {{ (auth.currentUser$ | async)?.displayName || "User" }}
+            </p>
           </div>
         </div>
+      </div>
       }
 
       <div class="mb-6">
         @if (!(auth.isAuthenticated$ | async)) {
-          <a 
-            href="#" 
-            (click)="openModal($event)"
-            class="flex items-center gap-3 px-4 py-3.5 rounded-xl 
-                   bg-white/5 hover:bg-indigo-500/30 
-                   backdrop-blur-sm
-                   border border-white/10 hover:border-indigo-400/50
-                   transition-all duration-300 group
-                   shadow-lg hover:shadow-indigo-500/20">
-            <span class="material-icons text-xl text-indigo-300 group-hover:text-white transition-colors">login</span>
-            <span class="text-base font-medium text-white/90 group-hover:text-white">Login / Register</span>
-          </a>
+        <a
+          href="#"
+          (click)="openModal($event)"
+          class="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-white/5 hover:bg-indigo-500/30 backdrop-blur-sm border border-white/10 hover:border-indigo-400/50 transition-all duration-300 group shadow-lg hover:shadow-indigo-500/20"
+        >
+          <span
+            class="material-icons text-xl text-indigo-300 group-hover:text-white transition-colors"
+            >login</span
+          >
+          <span
+            class="text-base font-medium text-white/90 group-hover:text-white"
+            >Login / Register</span
+          >
+        </a>
         } @else {
-          <div class="space-y-2">
-            <a 
-              routerLink="/manage" 
-              routerLinkActive="bg-indigo-500/40 border-indigo-400/60 shadow-indigo-500/30"
-              [routerLinkActiveOptions]="{exact:true}"
-              [queryParams]="{sort:'1'}"
-              (click)="closeMobileMenu()"
-              class="flex items-center gap-3 px-4 py-3.5 rounded-xl 
-                     bg-white/5 hover:bg-indigo-500/30 
-                     backdrop-blur-sm
-                     border border-white/10 hover:border-indigo-400/50
-                     transition-all duration-300 group
-                     shadow-lg hover:shadow-indigo-500/20">
-              <span class="material-icons text-xl text-indigo-300 group-hover:text-white transition-colors">video_library</span>
-              <span class="text-base font-medium text-white/90 group-hover:text-white">Manage</span>
-            </a>
-            
-            <a 
-              routerLink="/upload" 
-              routerLinkActive="bg-indigo-500/40 border-indigo-400/60 shadow-indigo-500/30"
-              [routerLinkActiveOptions]="{exact:true}"
-              (click)="closeMobileMenu()"
-              class="flex items-center gap-3 px-4 py-3.5 rounded-xl 
-                     bg-white/5 hover:bg-indigo-500/30 
-                     backdrop-blur-sm
-                     border border-white/10 hover:border-indigo-400/50
-                     transition-all duration-300 group
-                     shadow-lg hover:shadow-indigo-500/20">
-              <span class="material-icons text-xl text-indigo-300 group-hover:text-white transition-colors">cloud_upload</span>
-              <span class="text-base font-medium text-white/90 group-hover:text-white">Upload</span>
-            </a>
-            
-            <a 
-              href="#"
-              (click)="auth.logout($event); closeMobileMenu()"
-              class="flex items-center gap-3 px-4 py-3.5 rounded-xl 
-                     bg-white/5 hover:bg-red-500/30 
-                     backdrop-blur-sm
-                     border border-white/10 hover:border-red-400/50
-                     transition-all duration-300 group
-                     shadow-lg hover:shadow-red-500/20">
-              <span class="material-icons text-xl text-red-300 group-hover:text-white transition-colors">logout</span>
-              <span class="text-base font-medium text-white/90 group-hover:text-white">Logout</span>
-            </a>
-          </div>
+        <div class="space-y-2">
+          <a
+            routerLink="/manage"
+            routerLinkActive="bg-indigo-500/40 border-indigo-400/60 shadow-indigo-500/30"
+            [routerLinkActiveOptions]="{ exact: true }"
+            [queryParams]="{ sort: '1' }"
+            (click)="closeMobileMenu()"
+            class="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-white/5 hover:bg-indigo-500/30 backdrop-blur-sm border border-white/10 hover:border-indigo-400/50 transition-all duration-300 group shadow-lg hover:shadow-indigo-500/20"
+          >
+            <span
+              class="material-icons text-xl text-indigo-300 group-hover:text-white transition-colors"
+              >video_library</span
+            >
+            <span
+              class="text-base font-medium text-white/90 group-hover:text-white"
+              >Manage</span
+            >
+          </a>
+
+          <a
+            routerLink="/upload"
+            routerLinkActive="bg-indigo-500/40 border-indigo-400/60 shadow-indigo-500/30"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeMobileMenu()"
+            class="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-white/5 hover:bg-indigo-500/30 backdrop-blur-sm border border-white/10 hover:border-indigo-400/50 transition-all duration-300 group shadow-lg hover:shadow-indigo-500/20"
+          >
+            <span
+              class="material-icons text-xl text-indigo-300 group-hover:text-white transition-colors"
+              >cloud_upload</span
+            >
+            <span
+              class="text-base font-medium text-white/90 group-hover:text-white"
+              >Upload</span
+            >
+          </a>
+
+          <a
+            href="#"
+            (click)="auth.logout($event); closeMobileMenu()"
+            class="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-white/5 hover:bg-red-500/30 backdrop-blur-sm border border-white/10 hover:border-red-400/50 transition-all duration-300 group shadow-lg hover:shadow-red-500/20"
+          >
+            <span
+              class="material-icons text-xl text-red-300 group-hover:text-white transition-colors"
+              >logout</span
+            >
+            <span
+              class="text-base font-medium text-white/90 group-hover:text-white"
+              >Logout</span
+            >
+          </a>
+        </div>
         }
       </div>
 
       <div class="border-t border-white/10 my-6 shadow-sm"></div>
 
       <div class="space-y-2 mb-6">
-        <a 
-          routerLink="/about" 
+        <a
+          routerLink="/about"
           routerLinkActive="bg-indigo-500/40 border-indigo-400/60 shadow-indigo-500/30"
           (click)="closeMobileMenu()"
-          class="flex items-center gap-3 px-4 py-3.5 rounded-xl 
-                 bg-white/5 hover:bg-indigo-500/30 
-                 backdrop-blur-sm
-                 border border-white/10 hover:border-indigo-400/50
-                 transition-all duration-300 group
-                 shadow-lg hover:shadow-indigo-500/20">
-          <span class="material-icons text-xl text-indigo-300 group-hover:text-white transition-colors">info</span>
-          <span class="text-base font-medium text-white/90 group-hover:text-white">About</span>
+          class="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-white/5 hover:bg-indigo-500/30 backdrop-blur-sm border border-white/10 hover:border-indigo-400/50 transition-all duration-300 group shadow-lg hover:shadow-indigo-500/20"
+        >
+          <span
+            class="material-icons text-xl text-indigo-300 group-hover:text-white transition-colors"
+            >info</span
+          >
+          <span
+            class="text-base font-medium text-white/90 group-hover:text-white"
+            >About</span
+          >
         </a>
       </div>
 
       <div class="border-t border-white/10 my-6 shadow-sm"></div>
 
       <div>
-        <h3 class="text-xs uppercase text-indigo-200/60 font-semibold mb-3 px-4 tracking-wider">Language</h3>
+        <h3
+          class="text-xs uppercase text-indigo-200/60 font-semibold mb-3 px-4 tracking-wider"
+        >
+          Language
+        </h3>
         <div class="space-y-2">
-          <button 
+          <button
             type="button"
-            class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl 
-                   bg-indigo-500/40 
-                   backdrop-blur-sm
-                   border border-indigo-400/60
-                   shadow-lg shadow-indigo-500/30
-                   transition-all duration-300">
-       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA1CAMAAACA7r40AAAA/FBMVEWyIjNPN2Y8O27///8/PnBOTXxycpY9PG9RUX5HR3dIR3dLSnlPTny4uMpWVYFFRHVwb5VlZIx7e52DgqOIh6aIiKc+PXBJSHhTUn9hYYqyIjReXohgX4lYV4Lr6/C2tcjPdYB0c5haWYRYV4Nra5GJiac+PW/FxdTHYG1RUH3eoajltbtOTXvty89BQHHg3+hSUX6GYoC6usyVlbFycZa7u8yUk6+sq8FCQXO0tMe1tMhiYYpMS3pDQnNvbpTExNN8fJ7GxdTGxtWCgqLHx9WXlrLXi5SYl7Kiobrg4Oiiorrn5u3n5+2jo7ukpLvw8PTx8fX09Pf19firqsC5sMNxAAAAAnRSTlPQ9qN1Xw4AAAGlSURBVHhe7ZXFiiRBFEVjznvp5W7t7j3u7m7//y8D1dAMGbnI4jW5KOpsgjibCxFcrrtVEmcBGAGQJHB98d3EgEM/ygsg/nwRAy15rxQ4Ywh3JQX49hVgKA/Ad1hDkkGTMSQJjGkOEmo133FmwAEQyl8FfSj3gFgkzjsQAw6AZ796AP2fGcDBS8/ZQ7ZQlJ2d+bEFqp6zhuh9Cf9/pDtKkTs04KBTD4jgx3eICOodoshz1p7M6UUAUQ+Ap2Pf2UMI5UBBX18/Ut7ZQ84Jui10QKsbcA7dt77jxIBDt+sxMNzrD4HL+rZS4Iw9iTZkCjRFmsBUHkcUOGMI7dkpKezuQsrprM3zR76zN572ekdBX623gaONJ0d5B5sGHAA1+QTwRQJgX2Q/7+w9GZGlDZKERpoxgkbDc8s0WscGSo+WGMiNVlgwWuFNjdafPsDe7wzg3RvP2UNCFGVtbX6EoOo7PhgoO1rGnswHiquB4mqgfIcxpBTGkNslMf2JVMAShRxXgJtUwBKFbFbAqicL4U4qYNWThXCHFbDqyUK4swpY9WQhXBX8A2rVjaQ6HWXmAAAAAElFTkSuQmCC" 
-                 alt="English" 
-                 width="20" 
-                 height="13"
-                 class="rounded shadow-sm">
+            class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-indigo-500/40 backdrop-blur-sm border border-indigo-400/60 shadow-lg shadow-indigo-500/30 transition-all duration-300"
+          >
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA1CAMAAACA7r40AAAA/FBMVEWyIjNPN2Y8O27///8/PnBOTXxycpY9PG9RUX5HR3dIR3dLSnlPTny4uMpWVYFFRHVwb5VlZIx7e52DgqOIh6aIiKc+PXBJSHhTUn9hYYqyIjReXohgX4lYV4Lr6/C2tcjPdYB0c5haWYRYV4Nra5GJiac+PW/FxdTHYG1RUH3eoajltbtOTXvty89BQHHg3+hSUX6GYoC6usyVlbFycZa7u8yUk6+sq8FCQXO0tMe1tMhiYYpMS3pDQnNvbpTExNN8fJ7GxdTGxtWCgqLHx9WXlrLXi5SYl7Kiobrg4Oiiorrn5u3n5+2jo7ukpLvw8PTx8fX09Pf19firqsC5sMNxAAAAAnRSTlPQ9qN1Xw4AAAGlSURBVHhe7ZXFiiRBFEVjznvp5W7t7j3u7m7//y8D1dAMGbnI4jW5KOpsgjibCxFcrrtVEmcBGAGQJHB98d3EgEM/ygsg/nwRAy15rxQ4Ywh3JQX49hVgKA/Ad1hDkkGTMSQJjGkOEmo133FmwAEQyl8FfSj3gFgkzjsQAw6AZ796AP2fGcDBS8/ZQ7ZQlJ2d+bEFqp6zhuh9Cf9/pDtKkTs04KBTD4jgx3eICOodoshz1p7M6UUAUQ+Ap2Pf2UMI5UBBX18/Ut7ZQ84Jui10QKsbcA7dt77jxIBDt+sxMNzrD4HL+rZS4Iw9iTZkCjRFmsBUHkcUOGMI7dkpKezuQsrprM3zR76zN572ekdBX623gaONJ0d5B5sGHAA1+QTwRQJgX2Q/7+w9GZGlDZKERpoxgkbDc8s0WscGSo+WGMiNVlgwWuFNjdafPsDe7wzg3RvP2UNCFGVtbX6EoOo7PhgoO1rGnswHiquB4mqgfIcxpBTGkNslMf2JVMAShRxXgJtUwBKFbFbAqicL4U4qYNWThXCHFbDqyUK4swpY9WQhXBX8A2rVjaQ6HWXmAAAAAElFTkSuQmCC"
+              alt="English"
+              width="20"
+              height="13"
+              class="rounded shadow-sm"
+            />
             <span class="font-medium">EN</span>
-            <span class="material-icons text-sm transition-transform group-hover:rotate-180">expand_more</span>
-            <span class="material-icons text-base ml-auto text-indigo-300">check_circle</span>
+            <span
+              class="material-icons text-sm transition-transform group-hover:rotate-180"
+              >expand_more</span
+            >
+            <span class="material-icons text-base ml-auto text-indigo-300"
+              >check_circle</span
+            >
           </button>
-          
-          <button 
+
+          <button
             type="button"
             disabled
-            class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl 
-                   bg-white/5 
-                   backdrop-blur-sm
-                   border border-white/10
-                   transition-all duration-300 opacity-50 cursor-not-allowed">
-            <img 
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAHlBMVEUpQqK2q8384OL3qa/tKTkAI5Wrt9z////5t7ztKTlzpJCAAAAABXRSTlP++vjs1BQWlgsAAAAxSURBVHgBYmRAA4yKaAJCAugqQgHtyzENAAAAAiD7pzaDr4MfRVEURVGU36IoipK5FLWNJ6UFusbWAAAAAElFTkSuQmCC" 
-              alt="fr" 
-              width="22" 
-              height="15" 
-              class="rounded shadow-sm">
+            class="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 transition-all duration-300 opacity-50 cursor-not-allowed"
+          >
+            <img
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDBAMAAACYZb3pAAAAHlBMVEUpQqK2q8384OL3qa/tKTkAI5Wrt9z////5t7ztKTlzpJCAAAAABXRSTlP++vjs1BQWlgsAAAAxSURBVHgBYmRAA4yKaAJCAugqQgHtyzENAAAAAiD7pzaDr4MfRVEURVGU36IoipK5FLWNJ6UFusbWAAAAAElFTkSuQmCC"
+              alt="fr"
+              width="22"
+              height="15"
+              class="rounded shadow-sm"
+            />
             <span class="text-sm font-medium text-white/70">French</span>
-            <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded ml-auto uppercase font-semibold text-indigo-200">Soon</span>
+            <span
+              class="text-[10px] bg-white/10 px-2 py-0.5 rounded ml-auto uppercase font-semibold text-indigo-200"
+              >Soon</span
+            >
           </button>
         </div>
       </div>
     </nav>
 
-    <div class="p-4 border-t border-white/10 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 backdrop-blur-md">
-      <p class="text-[10px] text-indigo-200/60 text-center leading-relaxed font-medium">
+    <div
+      class="p-4 border-t border-white/10 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 backdrop-blur-md"
+    >
+      <p
+        class="text-[10px] text-indigo-200/60 text-center leading-relaxed font-medium"
+      >
         © 2025 Clipz. All rights reserved.
       </p>
     </div>
