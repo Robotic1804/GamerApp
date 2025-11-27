@@ -15,11 +15,11 @@ import { ClipsListComponent } from '../clips-list/clips-list.component';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
-  // Signal para referenciar el video
+
   heroVideo = viewChild<ElementRef<HTMLVideoElement>>('heroVideo');
 
   constructor() {
-    // Ejecuta después de que el DOM esté completamente renderizado
+  
     afterNextRender(() => {
       this.playVideo();
     });
@@ -33,11 +33,10 @@ export class HomeComponent {
       return;
     }
 
-    // Asegura que esté muted (obligatorio para autoplay)
     videoElement.muted = true;
     videoElement.playsInline = true;
 
-    // Intenta reproducir el video
+    
     const playPromise = videoElement.play();
 
     if (playPromise !== undefined) {
@@ -51,7 +50,7 @@ export class HomeComponent {
             error.message
           );
 
-          // Fallback: reproduce al primer click o touch del usuario
+         
           const playOnInteraction = () => {
             videoElement
               .play()
@@ -59,7 +58,7 @@ export class HomeComponent {
               .catch((err) => console.error('❌ Error al reproducir:', err));
           };
 
-          // Escucha eventos de interacción (solo una vez)
+       
           document.addEventListener('click', playOnInteraction, { once: true });
           document.addEventListener('touchstart', playOnInteraction, {
             once: true,

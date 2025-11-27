@@ -1,4 +1,4 @@
-import { Component, OnDestroy, DestroyRef, inject } from '@angular/core';
+import { Component, OnDestroy, DestroyRef, inject, afterNextRender } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { v4 as uuid } from 'uuid';
@@ -77,7 +77,15 @@ export class UploadComponent implements OnDestroy {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((user) => (this.user = user));
 
-    this.ffmpegService.init();
+    // Inicializar FFmpeg de forma asíncrona
+    afterNextRender(async () => {
+      try {
+        await this.ffmpegService.init();
+      } catch (error) {
+        console.error('Error al inicializar FFmpeg:', error);
+        // Puedes mostrar un mensaje de error al usuario aquí si lo deseas
+      }
+    });
 
     combineLatest([this.clipProgress$, this.screenshotProgress$])
       .pipe(

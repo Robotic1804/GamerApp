@@ -5,9 +5,19 @@
 
     <ng-container>
       @if (!ffmpegService.isReady) {
-      <span class="material-icons text-center text-6xl p-8 animate-spin">
-        settings
-      </span>
+      <div class="flex flex-col items-center justify-center py-16">
+        <span class="material-icons text-6xl mb-4 animate-spin text-indigo-500">
+          settings
+        </span>
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">Preparing Video Editor...</h3>
+        <p class="text-gray-500 text-center max-w-md">
+          Loading FFmpeg libraries. This may take a few seconds on first load.
+        </p>
+        <div class="mt-4 flex items-center text-sm text-gray-400">
+          <span class="material-icons text-sm mr-1">info</span>
+          <span>Files are cached for future use</span>
+        </div>
+      </div>
       } @else {
         <ng-container [ngTemplateOutlet]="uploadEditorCtr"></ng-container>
       }
